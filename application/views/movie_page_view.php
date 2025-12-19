@@ -123,28 +123,28 @@
 
                             <!--Third Slide-->
                             <div class="swiper-slide media-photo"> 
-                                <a href='images/movie/movie-img1-lg.jpg' class="movie__media-item">
+                                <a href='<?php echo $value['image1'] ?>' class="movie__media-item">
                                     <img alt='' src="<?php echo $value['image1'] ?>">
                                 </a>
                             </div>
 
                             <!--Four Slide-->
                             <div class="swiper-slide media-photo"> 
-                                <a href='images/movie/movie-img2-lg.jpg' class="movie__media-item">
+                                <a href='<?php echo $value['image2'] ?>' class="movie__media-item">
                                     <img alt='' src="<?php echo $value['image2'] ?>">
                                 </a>
                             </div>
 
                             <!--Slide-->
                             <div class="swiper-slide media-photo"> 
-                                <a href='images/gallery/large/item-7.jpg' class="movie__media-item">
+                                <a href='<?php echo $value['image3'] ?>' class="movie__media-item">
                                     <img alt='' src="<?php echo $value['image3'] ?>">
                                 </a>
                             </div>
 
                             <!--Slide-->
                             <div class="swiper-slide media-photo"> 
-                                <a href='images/gallery/large/item-11.jpg' class="movie__media-item">
+                                <a href='<?php echo $value['image4'] ?>' class="movie__media-item">
                                     <img alt='' src="<?php echo $value['image4'] ?>">
                                 </a>
                             </div>
