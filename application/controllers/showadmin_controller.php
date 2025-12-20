@@ -71,7 +71,7 @@ class showadmin_controller extends CI_Controller {
 		$diachi = $this->input->post('diachi');
 		
 		$this->load->model('showadmin_model');
-		$this->showadmin_model->addnv($email, $mkau, $mkauxn,$name, $birthday, $sdt, $diachi);
+		$this->showadmin_model->addnv($email, $mkau,$name, $birthday, $sdt, $diachi);
 		
 		$this->index_insertnv();
 	}

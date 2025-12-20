@@ -33,12 +33,11 @@ class showadmin_model extends CI_Model {
 		return $this->db->get('user') -> result_array();
 			}
 
-	public function addnv($e, $mk, $mkxn, $na, $bd, $sdt, $d)
+	public function addnv($e, $mk, $na, $bd, $sdt, $d)
 	{
 		$dulieucanadd = array(
 			'email' => $e,
 			'password'=> $mk,
-			'password_re'=> $mkxn,
 			'fullname'=>$na,
 			'birthday'=> $bd,
 			'sdt'=> $sdt,
