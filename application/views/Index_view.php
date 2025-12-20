@@ -590,7 +590,7 @@
 
 
 
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="social-group">
                              
 
@@ -602,7 +602,7 @@
                                 </div>
                                 
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                     <aside class="col-sm-4 col-md-3">

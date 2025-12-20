@@ -27,18 +27,17 @@ class Movie_page_controller extends CI_Controller {
 		$ketqua = array('dulieutucontroller' =>$ketqua);
 		$daychuadoi = date('Y-m-d');
 		$this->load->model('lich_model');
-		$dulieugio = $this->lich_model->getDatabaseLichchieu($idlaytuview, $daychuadoi);
-		$dulieugio = array('dulieugiotucontroller' => $dulieugio);
-		$day = date('d-m-Y');
-			
-		$dulieungay= array(array($day));
-		$dulieungay = array('dulieungaytucontroller'=>$dulieungay);
-		// echo "<pre>";
-		// var_dump($dulieungay);
-		// $this->load->model('lich_model');
-		// // $ketqualich = $this->lich_model->getinfophim($idlaytuview);
-		// echo "<pre>";
+		// Lấy tất cả ngày có lịch chiếu cho phim này
+		$dulieungay_result = $this->lich_model->getDatabaseNgay($idlaytuview); // mỗi phần tử có key 'day'
+		$dulieungay = array('dulieungaytucontroller' => $dulieungay_result);
 
+		// Gom nhóm các suất chiếu theo ngày
+		$dulieugio_by_day = array();
+		foreach ($dulieungay_result as $dg) {
+			$d = $dg['day'];
+			$dulieugio_by_day[$d] = $this->lich_model->getDatabaseLichchieu($idlaytuview, $d);
+		}
+		$dulieugio = array('dulieugiotucontroller' => $dulieugio_by_day);
 
 		$this->load->view('movie_page_view', $ketqua + $dulieungay + $dulieugio);
 		

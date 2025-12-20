@@ -185,53 +185,39 @@
         </div>
 
     <?php endforeach ?>
-    <?php foreach ($dulieungaytucontroller as $valuengay): ?>
-
-
-        
+    <?php if (!empty($dulieungaytucontroller)): ?>
         <h2 class="page-heading">lịch chiếu</h2>
-        
-        <div class="choose-container">
-                    <!-- <form id='select' class="select" method='get'>
-                          <select name="select_item" id="select-sort" class="select__sort" tabindex="0">
-                            <option value="1" selected='selected'>Hà Nội</option>
-                            <option value="2">Đà Nẵng</option>
-                            <option value="3">TP Hồ Chí Minh</option>
-                          
-                        </select>
-                    </form> -->
-
-                    <div class="datepicker">
-                      <span class="datepicker__marker"><i class="fa fa-calendar"></i>Ngày</span>
-                      <big><?= $valuengay[0] ?></big>
-                  </div>
-                  <pre></pre>
-
-
-
-                  <div class="clearfix"></div>
-
-                  <div class="time-select">
-                    <div class="time-select__group group--first">
-
-                        <ul class="col-sm-8 items-wrap">
-                            <?php foreach ($dulieugiotucontroller as $valuegio): ?>
-                                <a href="<?php echo base_url(); ?>index.php/seat_controller/index_seat/<?= $valuegio['id_calendar']; ?>"><li class="time-select__item"><?= $valuegio['time']; ?></li></a>
-                              
-                            <?php endforeach ?>
-                        </ul>
-                    </div>
-                    <!-- <?= $_SESSION['id_user'] ?> -->
-
-
-
-
-
-
+        <?php foreach ($dulieungaytucontroller as $valuengay): ?>
+            <div class="choose-container">
+                <div class="datepicker" style="position:relative;">
+                  <style>
+                    .datepicker:before, .datepicker:after { display: none !important; content: none !important; }
+                  </style>
+                  <span class="datepicker__marker"><i class="fa fa-calendar"></i>Ngày</span>
+                  <big><?= isset($valuengay['day']) ? $valuengay['day'] : htmlspecialchars($valuengay[0]) ?></big>
                 </div>
-            <?php endforeach ?>
+              <div class="clearfix"></div>
 
+              <div class="time-select">
+                <div class="time-select__group group--first">
 
+                    <ul class="col-sm-8 items-wrap">
+                        <?php 
+                            $daykey = isset($valuengay['day']) ? $valuengay['day'] : $valuengay[0];
+                            if (!empty($dulieugiotucontroller[$daykey])):
+                                foreach ($dulieugiotucontroller[$daykey] as $valuegio): ?>
+                                    <a href="<?php echo base_url(); ?>index.php/seat_controller/index_seat/<?= $valuegio['id_calendar']; ?>"><li class="time-select__item"><?= $valuegio['time']; ?></li></a>
+                                <?php endforeach; 
+                            else: ?>
+                                <li class="time-select__item">Không có suất chiếu</li>
+                            <?php endif; ?>
+                    </ul>
+                </div>
+                <!-- <?= $_SESSION['id_user'] ?> -->
+            </div>
+        </div>
+        <?php endforeach ?>
+    <?php endif; ?>
             <!-- hiden maps with multiple locator-->
 
 
