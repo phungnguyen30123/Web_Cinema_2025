@@ -177,8 +177,8 @@
                             <span class="sits__place sits-price--cheap" data-place='D4' data-price='10'>D4</span>
                             <span class="sits__place sits-price--cheap" data-place='D5' data-price='10'>D5</span>
                             <span class="sits__place sits-price--cheap" data-place='D6' data-price='10'>D6</span>
-                            <span class="sits__place sits-price--cheap sits-state--not" data-place='D7' data-price='10'>D7</span>
-                            <span class="sits__place sits-price--cheap sits-state--not" data-place='D8' data-price='10'>D8</span>
+                            <span class="sits__place sits-price--cheap" data-place='D7' data-price='10'>D7</span>
+                            <span class="sits__place sits-price--cheap" data-place='D8' data-price='10'>D8</span>
                             <span class="sits__place sits-price--cheap" data-place='D9' data-price='10'>D9</span>
                             <span class="sits__place sits-price--cheap" data-place='D10' data-price='10'>D10</span>
                             <span class="sits__place sits-price--cheap" data-place='D11' data-price='10'>D11</span>
@@ -516,9 +516,16 @@
     <script src="<?php echo base_url(); ?>js/custom.js"></script>
     <script type='text/javascript'>
         $(document).ready(function() {
-            var ghedaban = $('.ghedaban').val();
-            // // console.log($ghedaban);
-            var ghedabanmang = ghedaban.split(', ');
+            var ghedaban = $('.ghedaban').val() || '';
+            // Normalize into an array without extra spaces
+            var ghedabanmang = [];
+            if (ghedaban.length) {
+                var parts = ghedaban.split(',');
+                for (var j = 0; j < parts.length; j++) {
+                    var part = parts[j].trim();
+                    if (part) ghedabanmang.push(part);
+                }
+            }
             for (var i = ghedabanmang.length - 1; i >= 0; i--) {
                 // $('.').attr('data-place')=ghedabanmang[i];
                $('span[data-place="'+ghedabanmang[i]+'"]').addClass('sits-state--not');
