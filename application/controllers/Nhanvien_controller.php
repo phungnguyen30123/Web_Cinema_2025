@@ -8,61 +8,55 @@
  * @property CI_Input $input
  * @property CI_Session $session
  */
-class Nhanvien_controller extends CI_Controller {
 
-	public function __construct()
-	{
-		parent::__construct();
-	}
+// Kế thừa từ MY_Controller để tận dụng bộ lọc bảo mật tập trung
+class Nhanvien_controller extends MY_Controller {
 
-	public function index()
-	{
-		$this->load->model('showPhim_model');		
-		$dulieu = $this->showPhim_model->getDatabasePhim();
-		$dulieu = array('dulieutucontroller' => $dulieu);
-		if ($this->session->userdata('vip2')) {
-			$this->load->view('qlyphim_view', $dulieu, FALSE);
-			
-		}else {
-			redirect('Login_register/indexlogin','refresh');
-		}
-		
-		
+    public function __construct()
+    {
+        parent::__construct();
+        // Cho phép cả Staff và Admin vào khu vực quản lý phim/vé
+        $this->restrict_to(['staff', 'admin']);
+    }
 
-	}
+    public function index()
+    {
+        $this->load->model('showPhim_model');       
+        $phim = $this->showPhim_model->getDatabasePhim();
+        $data = array('dulieutucontroller' => $phim);
 
-	public function deletePhim($idnhanduoc)
-	{
-		$this->load->model('showPhim_model');
-		if ($this->showPhim_model->deletePhimById($idnhanduoc)) {
-				$this->load->view('xoathanhcong_view');
-		} else {
-				
-		}
-	}
-	
-	public function index_xacnhanve()
-	{
-		$this->load->model('seat_model');
-		$dulieubooking = $this->seat_model->showBooking();
-		$dulieubooking = array('dulieubookingtucon' => $dulieubooking);
-		if ($this->session->userdata('vip2')) {
-			$this->load->view('xacnhanve_view', $dulieubooking);
-		}else {
-			redirect('Login_register/indexlogin','refresh');
-		}
-		
-	}
-	public function xacnhanve($idv)
-	{
-		$dulieucanupdate = array('status' => 1);
-		$this->db->where('id_ve', $idv);
-		$this->db->update('booking', $dulieucanupdate);
+        // Không cần kiểm tra session vip2 nữa vì MY_Controller đã lo
+        $this->load->view('qlyphim_view', $data);
+    }
 
-		$this -> index_xacnhanve();
-	}
-	
+    public function deletePhim($idnhanduoc)
+    {
+        $this->load->model('showPhim_model');
+        if ($this->showPhim_model->deletePhimById($idnhanduoc)) {
+            // Nên redirect thay vì chỉ load view để URL sạch hơn
+            redirect('Nhanvien_controller', 'refresh');
+        } else {
+            show_error("Không thể xóa phim này.");
+        }
+    }
+    
+    public function index_xacnhanve()
+    {
+        $this->load->model('seat_model');
+        $booking = $this->seat_model->showBooking();
+        $data = array('dulieubookingtucon' => $booking);
+
+        $this->load->view('xacnhanve_view', $data);
+    }
+
+    public function xacnhanve($idv)
+    {
+        // Sử dụng Query Builder một cách an toàn
+        $dulieucanupdate = array('status' => 1);
+        $this->db->where('id_ve', $idv);
+        $this->db->update('booking', $dulieucanupdate);
+
+        // Chuyển hướng về trang danh sách để cập nhật giao diện
+        redirect('Nhanvien_controller/index_xacnhanve', 'refresh');
+    }
 }
-
-/* End of file InsertPhim_controller.php */
-/* Location: ./application/controllers/InsertPhim_controller.php */
