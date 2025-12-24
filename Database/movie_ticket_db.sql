@@ -88,6 +88,20 @@ CREATE TABLE booking (
   FOREIGN KEY (id_calendar) REFERENCES calendar(id_calendar)
 ) ENGINE=InnoDB;
 
+-- ===== MOMO (PAYMENT) =====
+CREATE TABLE momo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    partnerCode VARCHAR(50),
+    orderId VARCHAR(50),
+    requestId VARCHAR(50),
+    amount VARCHAR(50),
+    orderInfo VARCHAR(50),
+    orderType VARCHAR(50),
+    transId VARCHAR(50),
+    payType VARCHAR(50),
+    signature VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- ===== INSERT DATA =====
 INSERT INTO `calendar` (`id_calendar`, `id_movie`, `day`, `id_phong`, `time`, `gia_ve`) VALUES
     (252, 14, '2025-12-20', 1, '20:10', 60000),

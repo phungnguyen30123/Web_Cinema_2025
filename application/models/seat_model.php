@@ -49,6 +49,10 @@ class seat_model extends CI_Model {
 		return $this->db->get('booking')->result_array();
 
 	}
+	public function addMomo($data_momo)
+	{
+		$this->db->insert('momo', $data_momo);
+	}
 
 }
 
