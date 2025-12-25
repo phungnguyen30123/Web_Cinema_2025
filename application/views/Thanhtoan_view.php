@@ -82,13 +82,13 @@
                         <li class="book-result__item">Tổng tiền: <span class="book-result__count booking-cost"><?= $valueghe[5]; ?> 000 đ</span></li>
                     </ul>
 
-                    <h2 class="page-heading">Chọn phương thức thanh toán</h2>
+                    <!-- <h2 class="page-heading">Chọn phương thức thanh toán</h2>
                     <div class="payment">
                         <a href="#" class="payment__item">
                             <img alt='' src="<?php echo base_url(); ?>images/payment/pay1.png">
                         </a>
                         <a href="#" class="payment__item">
-                            <!-- <img alt='' src="images/payment/pay2.png"> -->
+                             <img alt='' src="images/payment/pay2.png"> 
                         </a>
                         <a href="#" class="payment__item">
                             <img alt='' src="<?php echo base_url(); ?>images/payment/pay3.png">
@@ -104,33 +104,36 @@
                         </a>
                         <a href="#" class="payment__item">
                             <img alt='' src="<?php echo base_url(); ?>images/payment/pay7.png">
-                        </a>
-                    </div>
+                        </a> 
+                    </div>-->
 
                 </div>
                 
-                <div class="order">
-                    <form class="booking-pagination booking-pagination--margin" id='film-and-time' action="../seat_controller/index_ticket" method='post' enctype="multidata/form-data">
-
-                    <input type="hidden" name="id_user" value="<?= $_SESSION['id_user'] ?>">
-                    <input type="hidden" name='choosen-cost' class="choosen-cost" value="<?= $valueghe[5]; ?> 000 đ">
-                    <input type="hidden" name='choosen-sits' class="choosen-sits" value="<?= $valueghe[6]; ?>">
-
-                    <input type="hidden" name="id_calendar" class="id_calendar" value="<?= $valueghe[0]; ?>">
-                    <input type="hidden" name="tenphim" class="tenphim" value="<?= $valueghe[7]; ?>">
-                    <input type="hidden" name="ngay" class="ngay" value="<?= $valueghe[8]; ?>">
-                    <input type="hidden" name="gio" class="gio" value="<?= $valueghe[9]; ?>">
-
-
-
-                    <!-- <input class="seats" id="seats" name="seats" value=""> -->
-
-
-                    <button class="btn btn-md btn--warning btn--wide">
-                        Thanh toán
-                    </button>
-
-                </form>
+                <div class="order">                    
+                    <form class="booking-pagination booking-pagination--margin" id='payment-form' action="<?php echo base_url(); ?>index.php/ThanhToan_controller/process" method='post' enctype="multidata/form-data">
+                        <!-- Tất cả hidden inputs chung -->
+                        <input type="hidden" name="id_user" value="<?= $_SESSION['id_user'] ?>">
+                        <input type="hidden" name='choosen-cost' value="<?= $valueghe[5]; ?> 000 đ">
+                        <input type="hidden" name='choosen-sits' value="<?= $valueghe[6]; ?>">
+                        <input type="hidden" name="id_calendar" value="<?= $valueghe[0]; ?>">
+                        <input type="hidden" name="tenphim" value="<?= $valueghe[7]; ?>">
+                        <input type="hidden" name="ngay" value="<?= $valueghe[8]; ?>">
+                        <input type="hidden" name="gio" value="<?= $valueghe[9]; ?>">
+                        
+                        <div class="payment" style="margin-bottom: 20px;">
+                            <h3 for="payment-method" style="display: block; margin-bottom: 10px; font-weight: bold;">
+                                Phương thức thanh toán:
+                            </h3>
+                            <select id="payment-method" name="payment_method" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 15px;">
+                                <option selected value="payUrl">Thanh toán qua MoMo</option>
+                                <option value="redirect">Thanh toán qua VNPay</option>
+                            </select>
+                            
+                            <button type="submit" style="width: 100%; padding: 12px; border: gray solid 1px; border-radius: 5px; background-color: #ffd564; cursor: pointer; font-weight: bold;">
+                                Thanh toán
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
             </div>

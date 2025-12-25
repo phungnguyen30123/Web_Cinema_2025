@@ -8,6 +8,8 @@ DROP TABLE IF EXISTS movie;
 DROP TABLE IF EXISTS room;
 DROP TABLE IF EXISTS movie_category;
 DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS momo;
+DROP TABLE IF EXISTS vnpay;
 
 -- ===== USER =====
 CREATE TABLE user (
@@ -87,6 +89,37 @@ CREATE TABLE booking (
   FOREIGN KEY (id_user) REFERENCES user(id),
   FOREIGN KEY (id_calendar) REFERENCES calendar(id_calendar)
 ) ENGINE=InnoDB;
+
+-- ===== MOMO (PAYMENT) =====
+CREATE TABLE momo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    partnerCode VARCHAR(50),
+    orderId VARCHAR(50),
+    requestId VARCHAR(50),
+    amount VARCHAR(50),
+    orderInfo VARCHAR(50),
+    orderType VARCHAR(50),
+    transId VARCHAR(50),
+    payType VARCHAR(50),
+    signature VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ===== VNPAY (PAYMENT) =====
+CREATE TABLE vnpay (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    vnp_Amount VARCHAR(50),
+    vnp_BankCode VARCHAR(50),
+    vnp_BankTranNo VARCHAR(50),
+    vnp_CardType VARCHAR(50),
+    vnp_OrderInfo VARCHAR(255),
+    vnp_PayDate VARCHAR(20),
+    vnp_ResponseCode VARCHAR(10),
+    vnp_TmnCode VARCHAR(20),
+    vnp_TransactionNo VARCHAR(50),
+    vnp_TransactionStatus VARCHAR(10),
+    vnp_TxnRef VARCHAR(50),
+    vnp_SecureHash VARCHAR(255)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ===== INSERT DATA =====
 INSERT INTO `calendar` (`id_calendar`, `id_movie`, `day`, `id_phong`, `time`, `gia_ve`) VALUES
