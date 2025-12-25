@@ -53,6 +53,10 @@ class seat_model extends CI_Model {
 	{
 		$this->db->insert('momo', $data_momo);
 	}
+	public function addVnpay($data_vnpay)
+	{
+		$this->db->insert('vnpay', $data_vnpay);
+	}
 
 }
 

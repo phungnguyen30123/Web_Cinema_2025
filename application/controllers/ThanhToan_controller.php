@@ -23,7 +23,6 @@ class ThanhToan_controller extends CI_Controller {
             // Lưu log giao dịch MoMo (không liên quan tới booking)
             $data_momo = [
                 'partnerCode' => $_GET['partnerCode'],
-                // sửa 'orderIdf' -> 'orderId' cho đúng key MoMo trả về
                 'orderId'    => $_GET['orderId'],
                 'requestId'  => $_GET['requestId'],
                 'amount'     => $_GET['amount'],
@@ -59,9 +58,52 @@ class ThanhToan_controller extends CI_Controller {
                 // Không tìm thấy dữ liệu booking -> không insert được, tránh lỗi id_user NULL
                 echo "Không tìm thấy thông tin đặt vé trong session. Vui lòng đặt vé lại.";
             }
-        } else {
+        } 
+        elseif (isset($_GET['vnp_Amount'])) {
+            $data_vnpay = [
+                'vnp_Amount'      => $_GET['vnp_Amount'],
+                'vnp_BankCode'    => $_GET['vnp_BankCode'],
+                'vnp_BankTranNo'  => $_GET['vnp_BankTranNo'],
+                'vnp_CardType'    => $_GET['vnp_CardType'],
+                'vnp_OrderInfo'   => $_GET['vnp_OrderInfo'],
+                'vnp_PayDate'     => $_GET['vnp_PayDate'],
+                'vnp_ResponseCode'=> $_GET['vnp_ResponseCode'],
+                'vnp_TmnCode'     => $_GET['vnp_TmnCode'],
+                'vnp_TransactionNo'=> $_GET['vnp_TransactionNo'],
+                'vnp_TransactionStatus' => $_GET['vnp_TransactionStatus'],
+                'vnp_TxnRef'      => $_GET['vnp_TxnRef'],
+                'vnp_SecureHash'  => $_GET['vnp_SecureHash'],
+            ];
+
+            $this->load->model('seat_model');
+            $this->seat_model->addVnpay($data_vnpay);
+            
+            // Lấy thông tin booking đã lưu trong session trước khi redirect sang MoMo
+            $pending_booking = $this->session->userdata('pending_booking');
+
+            // Nếu có thông tin booking trong session thì tạo booking và hiển thị vé
+            if ($pending_booking) {
+                $this->processPaymentSuccess(
+                    'vnpay',
+                    $pending_booking['id_user'],
+                    $pending_booking['id_calendar'],
+                    $pending_booking['choosen_sits'],
+                    $pending_booking['choosen_cost'],
+                    $pending_booking['tenphim'],
+                    $pending_booking['ngay'],
+                    $pending_booking['gio']
+                );
+
+                // Xóa session sau khi dùng xong
+                $this->session->unset_userdata('pending_booking');
+            } else {
+                // Không tìm thấy dữ liệu booking -> không insert được, tránh lỗi id_user NULL
+                echo "Không tìm thấy thông tin đặt vé trong session. Vui lòng đặt vé lại.";
+            }
+        }
+
+        else {
             echo "Error, chưa thanh toán thành công";
-            redirect('seat_controller/index_thanhtoan', 'refresh');
             return;
         }
 	}
@@ -78,21 +120,20 @@ class ThanhToan_controller extends CI_Controller {
         $payment_method = $this->input->post('payment_method');
         
         // Validate
-        if (empty($payment_method) || !in_array($payment_method, ['payUrl', 'vnpay'])) {
+        if (empty($payment_method) || !in_array($payment_method, ['payUrl', 'redirect'])) {
             redirect('seat_controller/index_thanhtoan', 'refresh');
             return;
         }
 
         // Route đến phương thức thanh toán tương ứng
         if ($payment_method === 'payUrl') {
-            // echo 'momo';
             $this->momo();
-        } else if ($payment_method === 'vnpay') {
-            // echo 'vnpay';
+        } else if ($payment_method === 'redirect') {
             $this->vnpay();
         }
     }
 
+    // funtion dưới dùng cho api MoMo
     public function execPostRequest($url, $data)
     {
         $ch = curl_init($url);
@@ -143,7 +184,6 @@ class ThanhToan_controller extends CI_Controller {
         $amount = intval($amount) * 1000; // Chuyển sang VND (ví dụ: 100000)
         
         $orderId = time() . rand(1000, 9999); // Tạo orderId unique
-		// nên dùng tạm cái này
         $redirectUrl = "http://localhost/Web_Cinema/index.php/ThanhToan_controller/xulyketqua";
         $ipnUrl = "http://localhost/Web_Cinema/index.php/ThanhToan_controller/xulyketqua";
         $extraData = ""; // Khởi tạo extraData
@@ -214,8 +254,95 @@ class ThanhToan_controller extends CI_Controller {
             redirect('seat_controller/index_thanhtoan', 'refresh');
             return;
         }
-        $this->processPaymentSuccess('vnpay', $id_user, $id_calendar, $choosen_sits, $choosen_cost, $tenphim, $ngay, $gio);
+        // Tích hợp api vnpay
+        $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+        $vnp_Returnurl = "http://localhost/Web_Cinema/index.php/ThanhToan_controller/xulyketqua";
+        $vnp_TmnCode = "0Y2DZ2YT";//Mã website tại VNPAY 
+        $vnp_HashSecret = "LMJGSEPV8PDCDRZVS1THDTMZYZUCE6HB"; //Chuỗi bí mật
+        
+        $vnp_TxnRef = rand(00,9999); //Mã đơn hàng.
+        $vnp_OrderInfo = 'Noi dung thanh toan';
+        $vnp_OrderType = 'billpayment';
+        // $vnp_Amount = $_POST['amount'] * 100;
+        $amount = str_replace([' 000 đ', ' ', 'đ'], '', $choosen_cost);
+        $amount = intval($amount) * 100000; // Chuyển sang VND (ví dụ: 100000)
+        $vnp_Amount = $amount;
+        $vnp_Locale = 'vn';
+        $vnp_BankCode = 'NCB';
+        $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
+        // Set expiration time to current time + 15 minutes, GMT+7 (format: yyyyMMddHHmmss)
+        $dt = new DateTime('now', new DateTimeZone('Asia/Ho_Chi_Minh'));
+        $dt->modify('+15 minutes');
+        $vnp_ExpireDate = $dt->format('YmdHis');
+
+        $inputData = array(
+            "vnp_Version" => "2.1.0",
+            "vnp_TmnCode" => $vnp_TmnCode,
+            "vnp_Amount" => $vnp_Amount,
+            "vnp_Command" => "pay",
+            "vnp_CreateDate" => date('YmdHis'),
+            "vnp_CurrCode" => "VND",
+            "vnp_IpAddr" => $vnp_IpAddr,
+            "vnp_Locale" => $vnp_Locale,
+            "vnp_OrderInfo" => $vnp_OrderInfo,
+            "vnp_OrderType" => $vnp_OrderType,
+            "vnp_ReturnUrl" => $vnp_Returnurl,
+            "vnp_TxnRef" => $vnp_TxnRef,
+            "vnp_ExpireDate"=>$vnp_ExpireDate
+        );
+        
+        if (isset($vnp_BankCode) && $vnp_BankCode != "") {
+            $inputData['vnp_BankCode'] = $vnp_BankCode;
+        }
+        // if (isset($vnp_Bill_State) && $vnp_Bill_State != "") {
+        //     $inputData['vnp_Bill_State'] = $vnp_Bill_State;
+        // }
+        
+        //var_dump($inputData);
+        ksort($inputData);
+        $query = "";
+        $i = 0;
+        $hashdata = "";
+        foreach ($inputData as $key => $value) {
+            if ($i == 1) {
+                $hashdata .= '&' . urlencode($key) . "=" . urlencode($value);
+            } else {
+                $hashdata .= urlencode($key) . "=" . urlencode($value);
+                $i = 1;
+            }
+            $query .= urlencode($key) . "=" . urlencode($value) . '&';
+        }
+        
+        $vnp_Url = $vnp_Url . "?" . $query;
+        if (isset($vnp_HashSecret)) {
+            $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret);//  
+            $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
+        }
+        
+        // Lưu thông tin booking vào session TRƯỚC khi redirect
+        $this->session->set_userdata('pending_booking', array(
+            'id_user' => $id_user,
+            'id_calendar' => $id_calendar,
+            'choosen_sits' => $choosen_sits,
+            'choosen_cost' => $choosen_cost,
+            'tenphim' => $tenphim,
+            'ngay' => $ngay,
+            'gio' => $gio,
+            'vnp_TxnRef' => $vnp_TxnRef
+        ));
+        
+        $returnData = array('code' => '00'
+            , 'message' => 'success'
+            , 'data' => $vnp_Url);
+        if (isset($_POST['payment_method'])) {
+            header('Location: ' . $vnp_Url);
+            die();
+        } else {
+            //echo json_encode($returnData);
+            echo "run into here";
+        }
     }
+    
 
     /**
      * Xử lý sau khi thanh toán thành công

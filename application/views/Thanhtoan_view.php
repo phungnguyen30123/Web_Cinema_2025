@@ -126,7 +126,7 @@
                             </h3>
                             <select id="payment-method" name="payment_method" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 15px;">
                                 <option selected value="payUrl">Thanh toán qua MoMo</option>
-                                <option value="vnpay">Thanh toán qua VNPay</option>
+                                <option value="redirect">Thanh toán qua VNPay</option>
                             </select>
                             
                             <button type="submit" style="width: 100%; padding: 12px; border: gray solid 1px; border-radius: 5px; background-color: #ffd564; cursor: pointer; font-weight: bold;">
