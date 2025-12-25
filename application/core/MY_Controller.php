@@ -10,9 +10,10 @@
 class MY_Controller extends CI_Controller {
     public function __construct() {
         parent::__construct();
-        // Kiểm tra nếu chưa đăng nhập thì đuổi về trang login
+        // Kiểm tra nếu chưa đăng nhập thì redirect về trang chủ và mở popup đăng nhập
         if (!$this->session->userdata('logged_in')) {
-            redirect('Login_register/indexlogin');
+            $this->session->set_flashdata('error_msg', 'Vui lòng đăng nhập để tiếp tục');
+            redirect(site_url('Index_controller') . '?show_login=1');
         }
     }
 

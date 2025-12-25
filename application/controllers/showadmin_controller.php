@@ -21,10 +21,45 @@ class showadmin_controller extends MY_Controller {
     public function index()
     {
         $this->load->model('showadmin_model');
-        $dulieu = $this->showadmin_model->getadmin();
-        $data = array('dulieuvaocontroller' => $dulieu);
+        $this->load->library('pagination');
+        
+        // Cấu hình phân trang
+        $config['base_url'] = site_url($this->router->class . '/' . $this->router->method);
+        $config['total_rows'] = $this->showadmin_model->countAdmin();
+        $config['per_page'] = 10;
+        $config['uri_segment'] = 3;
+        $config['use_page_numbers'] = TRUE;
+        $config['first_link'] = 'Đầu';
+        $config['last_link'] = 'Cuối';
+        $config['next_link'] = '&gt;';
+        $config['prev_link'] = '&lt;';
+        $config['full_tag_open'] = '<ul class="pagination">';
+        $config['full_tag_close'] = '</ul>';
+        $config['first_tag_open'] = '<li class="page-item">';
+        $config['first_tag_close'] = '</li>';
+        $config['last_tag_open'] = '<li class="page-item">';
+        $config['last_tag_close'] = '</li>';
+        $config['next_tag_open'] = '<li class="page-item">';
+        $config['next_tag_close'] = '</li>';
+        $config['prev_tag_open'] = '<li class="page-item">';
+        $config['prev_tag_close'] = '</li>';
+        $config['cur_tag_open'] = '<li class="page-item active"><span class="page-link">';
+        $config['cur_tag_close'] = '</span></li>';
+        $config['num_tag_open'] = '<li class="page-item">';
+        $config['num_tag_close'] = '</li>';
+        $config['attributes'] = array('class' => 'page-link');
+        
+        $this->pagination->initialize($config);
+        
+        $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 1;
+        $offset = ($page - 1) * $config['per_page'];
+        
+        $dulieu = $this->showadmin_model->getadminPaginated($config['per_page'], $offset);
+        $data = array(
+            'dulieuvaocontroller' => $dulieu,
+            'pagination_links' => $this->pagination->create_links()
+        );
 
-        // Không cần check if/else session ở đây nữa vì MY_Controller đã lo
         $this->load->view('taikhoan_view', $data);
     }
 
@@ -38,8 +73,44 @@ class showadmin_controller extends MY_Controller {
     public function index_qlnv()
     {
         $this->load->model('showadmin_model');
-        $dulieu = $this->showadmin_model->getNV();
-        $data = array('dulieuvaocontroller' => $dulieu);
+        $this->load->library('pagination');
+        
+        // Cấu hình phân trang
+        $config['base_url'] = site_url($this->router->class . '/' . $this->router->method);
+        $config['total_rows'] = $this->showadmin_model->countNV();
+        $config['per_page'] = 10;
+        $config['uri_segment'] = 3;
+        $config['use_page_numbers'] = TRUE;
+        $config['first_link'] = 'Đầu';
+        $config['last_link'] = 'Cuối';
+        $config['next_link'] = '&gt;';
+        $config['prev_link'] = '&lt;';
+        $config['full_tag_open'] = '<ul class="pagination">';
+        $config['full_tag_close'] = '</ul>';
+        $config['first_tag_open'] = '<li class="page-item">';
+        $config['first_tag_close'] = '</li>';
+        $config['last_tag_open'] = '<li class="page-item">';
+        $config['last_tag_close'] = '</li>';
+        $config['next_tag_open'] = '<li class="page-item">';
+        $config['next_tag_close'] = '</li>';
+        $config['prev_tag_open'] = '<li class="page-item">';
+        $config['prev_tag_close'] = '</li>';
+        $config['cur_tag_open'] = '<li class="page-item active"><span class="page-link">';
+        $config['cur_tag_close'] = '</span></li>';
+        $config['num_tag_open'] = '<li class="page-item">';
+        $config['num_tag_close'] = '</li>';
+        $config['attributes'] = array('class' => 'page-link');
+        
+        $this->pagination->initialize($config);
+        
+        $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 1;
+        $offset = ($page - 1) * $config['per_page'];
+        
+        $dulieu = $this->showadmin_model->getNVPaginated($config['per_page'], $offset);
+        $data = array(
+            'dulieuvaocontroller' => $dulieu,
+            'pagination_links' => $this->pagination->create_links()
+        );
 
         $this->load->view('qlynhanvien_view', $data);
     }

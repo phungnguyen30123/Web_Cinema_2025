@@ -98,9 +98,6 @@
 
 <body>
     <div class="wrapper">
-        <div class="banner-top">
-            <img alt="top banner" src="<?php echo base_url(); ?>images/banner.png" style="height:90px; width:1600px">
-        </div>
         <?php require('header_view.php') ?>
 
         <form id="login-form" class="login" action="<?php echo base_url(); ?>index.php/Login_register/register" method="post" enctype="multipart/form-data" autocomplete="off">

@@ -39,16 +39,6 @@
 <body>
 
      <div class="wrapper">
-        <div class="banner-top">
-        <img alt='top banner' src="<?php echo base_url(); ?>images/banner.png" style="height:90px; width:1600px">
-    </div>
-        <!-- Banner -->
-       
-       <!-- Banner -->
-       <!-- <div class="banner-top">
-        <img alt='top banner' src="images/banners/jnj.jpg" style="height:150px; width:1600px">
-    </div> -->
-
         <!-- Header section -->
         <?php require('header_view.php') ?>
 
@@ -215,7 +205,7 @@
                 </div>
                 <div class="col-xs-12 col-md-6">
                     <div class="footer-info">
-                        <p class="heading-special--small">YOUNET MEDIA<br><span class="title-edition">in the social media</span></p>
+                        <p class="heading-special--small">V-STAR MEDIA<br><span class="title-edition">in the social media</span></p>
 
                         <div class="social">
                             <a href='https://www.facebook.com/vku.udn.vn' class="social__variant fa fa-facebook"></a>

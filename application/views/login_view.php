@@ -63,14 +63,22 @@
 <body>
 
     <div class="wrapper">
-        <div class="banner-top">
-            <img alt='top banner' src="<?php echo base_url(); ?>images/banner.png" style="height:90px; width:1600px">
-        </div>
-
         <?php require('header_view.php') ?>
 
         <form id="login-form" class="login" action="login" method='post' enctype="multidata/form-data" autocomplete="off">
             <p class="login__title">Đăng nhập <br><span class="login-edition"></span></p>
+
+            <?php if ($this->session->flashdata('error_msg')): ?>
+                <div class="alert alert-danger" style="background-color: #f8d7da; color: #721c24; padding: 10px 15px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #f5c6cb;">
+                    <i class="fa fa-exclamation-circle"></i> <?php echo $this->session->flashdata('error_msg'); ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($this->session->flashdata('success_msg')): ?>
+                <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px 15px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #c3e6cb;">
+                    <i class="fa fa-check-circle"></i> <?php echo $this->session->flashdata('success_msg'); ?>
+                </div>
+            <?php endif; ?>
 
             <div class="field-wrap">
                 <input type='email' placeholder='Email' name='user-email' class="login__input" autocomplete="username">
@@ -117,7 +125,7 @@
             </div>
             <div class="col-xs-12 col-md-6">
                 <div class="footer-info">
-                    <p class="heading-special--small">YOUNET MEDIA<br><span class="title-edition">in the social media</span></p>
+                    <p class="heading-special--small">V-STAR MEDIA<br><span class="title-edition">in the social media</span></p>
 
                     <div class="social">
                         <a href='https://www.facebook.com/vku.udn.vn' class="social__variant fa fa-facebook"></a>

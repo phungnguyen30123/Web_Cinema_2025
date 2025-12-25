@@ -2,19 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>quản lý lịch chiếu</title>
 
-    <link rel="stylesheet" href="<?php echo base_url() ?>vendor/bootstrap.css">
-    <link rel="stylesheet" href="<?php echo base_url() ?>vendor/font-awesome.css">
-
-    <!-- Fonts -->
-    <!-- Font awesome - icon font -->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <!-- Roboto -->
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
-
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
 
     <!-- Mobile menu -->
     <link href="<?php echo base_url() ?>css/gozha-nav.css" rel="stylesheet" />
@@ -25,8 +23,46 @@
     <link href="<?php echo base_url() ?>css/themsty.css" rel="stylesheet">
     <link href="<?php echo base_url() ?>css/style.css?v=1" rel="stylesheet" />
 
+    <!-- jQuery (required for Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <!-- Modernizr --> 
     <script src="<?php echo base_url() ?>js/external/modernizr.custom.js"></script>
+    
+    <style>
+        .hidden-xs-up {
+            display: none !important;
+        }
+        .text-xs-center {
+            text-align: center;
+        }
+        .text-xs-right {
+            text-align: right;
+        }
+        .panel-primary {
+            border-color: #337ab7;
+        }
+        .panel-primary > .panel-heading {
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #337ab7;
+        }
+        .panel-primary > .panel-body {
+            background-color: #fff;
+            color: #333;
+        }
+        .list-group-item {
+            position: relative;
+            display: block;
+            padding: 10px 15px;
+            margin-bottom: -1px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+        .thaotac {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="container-fluid">
@@ -88,8 +124,8 @@
                                         </div>
                                     </div>
 
-                                    <div class="card card-inverse card-primary mb-3 text-center">
-                                        <div class="card-block cacgio1">
+                                    <div class="panel panel-primary text-center">
+                                        <div class="panel-body cacgio1">
                                             <h4>Phòng 1</h4>
                                             <?php foreach ($dulieutucontroller1 as $value1): ?>
                                             
@@ -105,7 +141,7 @@
 
                                                     <a data-href="<?= $value1['id_calendar']; ?>" class="nutluu btn btn-success">LƯU</a>
                                                 </div>
-                                                <div class="card-block">
+                                                <div>
                                                     <div class="jquery_gioedit hidden-xs-up">
                                                         <input type="time" name="gioedit" id="gioedit" class="form-control gioedit" value="<?= $value1['time']; ?>">
                                                     </div>
@@ -124,7 +160,7 @@
                                             <?php endforeach ?>
                                         </div>
 
-                                        <div class="card-block cacgio2">
+                                        <div class="panel-body cacgio2">
                                             <h4>Phòng 2</h4>
                                             <?php foreach ($dulieutucontroller2 as $value2): ?>
                                             
@@ -139,7 +175,7 @@
 
                                                     <a data-href="<?= $value2['id_calendar']; ?>" class="nutluu btn btn-success">LƯU</a>
                                                 </div>
-                                                <div class="card-block">
+                                                <div>
                                                     <div class="jquery_gioedit hidden-xs-up">
                                                         <input type="time" name="gioedit" id="gioedit" class="form-control gioedit">
                                                     </div>
@@ -163,7 +199,8 @@
                         <?php endforeach ?>
 
                         <!-- JavaScript-->
-                        <script type="text/javascript" src="<?php echo base_url() ?>vendor/bootstrap.js"></script>
+                        <!-- Bootstrap JS -->
+                        <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
                         <script type="text/javascript" src="<?php echo base_url() ?>1.js"></script>
                         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> 
 
@@ -177,6 +214,13 @@
                     id_movie= $('#id_movie').val();
                     day= $('#day').val();
                     gio = $(this).parent().children('input').val();
+                    
+                    // Kiểm tra giờ có được nhập không
+                    if (!gio) {
+                        alert('Vui lòng nhập giờ chiếu!');
+                        return;
+                    }
+                    
                     //console.log(id_phong, id_movie,day,gio);
                     $.ajax({
                         url: duongdan+'index.php/Qlylich_controller/ajax_themgio/'+id_phong+'/'+gio,
@@ -184,37 +228,50 @@
                         dataType: 'json',
                         data: {id_movie,day},
                     })
-                    .done(function() {
-                    //    console.log("success");
-                })
-                    .fail(function() {
-                    //    console.log("error");
-                })
-                    .always(function(res) {
-                        noidung = '<li class="list-group-item">';
-                        noidung += '<div class="thaotac text-xs-right">';
-                        noidung += '<a data-href="'+res+'" class="nutedit btn btn-danger"> <i class="fa fa-pencil"></i></a>';
-                        noidung += ' <a data-href="'+res+'" class="nutxoa btn btn-warning"> <i class="fa fa-remove"></i></a>';
-                        noidung += '</div>';
-                        noidung += '<div class="jquery_button text-xs-right hidden-xs-up">';
-                        noidung += '<a data-href="'+res+'" class="nutluu btn btn-success">LƯU</a>';
-                        noidung += '</div>';
-                        noidung += '<div class="card-block">';
-                        noidung += '<div class="jquery_gioedit hidden-xs-up">';
-                        noidung += '<input type="time" name="gioedit" id="gioedit" class="form-control gioedit">';
-                        noidung += '</div>';
-                        noidung += '<div class="giochuaedit">';
-                        noidung += gio;
-                        noidung += '</div>';
-                        noidung += '</div>';
-
-                        noidung += '</li>';
-                        $('.cacgio1').append(noidung); // thêm ngày mới vào
-                        $('#gio').val(''); // xoa ô input
+                    .done(function(response) {
+                        // Kiểm tra response từ server
+                        if (response && response.success === true) {
+                            // Thành công - thêm giờ chiếu mới vào danh sách
+                            var id_calendar = response.id_calendar;
+                            noidung = '<li class="list-group-item">';
+                            noidung += '<div class="thaotac text-xs-right">';
+                            noidung += '<a data-href="'+id_calendar+'" class="nutedit btn btn-danger"> <i class="fa fa-pencil"></i></a>';
+                            noidung += ' <a data-href="'+id_calendar+'" class="nutxoa btn btn-warning"> <i class="fa fa-remove"></i></a>';
+                            noidung += '</div>';
+                            noidung += '<div class="jquery_button text-xs-right hidden-xs-up">';
+                            noidung += '<a data-href="'+id_calendar+'" class="nutluu btn btn-success">LƯU</a>';
+                            noidung += '</div>';
+                            noidung += '<div>';
+                            noidung += '<div class="jquery_gioedit hidden-xs-up">';
+                            noidung += '<input type="time" name="gioedit" id="gioedit" class="form-control gioedit">';
+                            noidung += '</div>';
+                            noidung += '<div class="giochuaedit">';
+                            noidung += gio;
+                            noidung += '</div>';
+                            noidung += '</div>';
+                            noidung += '</li>';
+                            $('.cacgio1').append(noidung); // thêm giờ mới vào
+                            $('#gio').val(''); // xoa ô input
+                        } else {
+                            // Lỗi - hiển thị thông báo
+                            var errorMsg = response && response.message ? response.message : 'Có lỗi xảy ra khi thêm giờ chiếu!';
+                            alert(errorMsg);
+                        }
+                    })
+                    .fail(function(xhr, status, error) {
+                        // Xử lý lỗi AJAX
+                        console.error('AJAX Error:', status, error);
+                        try {
+                            var response = JSON.parse(xhr.responseText);
+                            if (response && response.message) {
+                                alert(response.message);
+                            } else {
+                                alert('Có lỗi xảy ra khi thêm giờ chiếu!');
+                            }
+                        } catch(e) {
+                            alert('Có lỗi xảy ra khi thêm giờ chiếu!');
+                        }
                     });
-                    
-
-                    
                 });
 
                 $('body').on('click', '#nutthemgiophong2', function(event) {
@@ -222,6 +279,13 @@
                     id_movie= $('#id_movie').val();
                     day= $('#day').val();
                     gio = $(this).parent().children('input').val();
+                    
+                    // Kiểm tra giờ có được nhập không
+                    if (!gio) {
+                        alert('Vui lòng nhập giờ chiếu!');
+                        return;
+                    }
+                    
                     //console.log(id_phong, id_movie,day,gio);
                     $.ajax({
                         url: duongdan+'index.php/Qlylich_controller/ajax_themgio/'+id_phong+'/'+gio,
@@ -229,37 +293,50 @@
                         dataType: 'json',
                         data: {id_movie,day},
                     })
-                    .done(function() {
-                    //    console.log("success");
-                })
-                    .fail(function() {
-                    //    console.log("error");
-                })
-                    .always(function(res) {
-                        noidung = '<li class="list-group-item">';
-                        noidung += '<div class="thaotac text-xs-right">';
-                        noidung += '<a data-href="'+res+'" class="nutedit btn btn-danger"> <i class="fa fa-pencil"></i></a>';
-                        noidung += ' <a data-href="'+res+'" class="nutxoa btn btn-warning"> <i class="fa fa-remove"></i></a>';
-                        noidung += '</div>';
-                        noidung += '<div class="jquery_button text-xs-right hidden-xs-up">';
-                        noidung += '<a data-href="'+res+'" class="nutluu btn btn-success">LƯU</a>';
-                        noidung += '</div>';
-                        noidung += '<div class="card-block">';
-                        noidung += '<div class="jquery_gioedit hidden-xs-up">';
-                        noidung += '<input type="time" name="gioedit" id="gioedit" class="form-control gioedit">';
-                        noidung += '</div>';
-                        noidung += '<div class="giochuaedit">';
-                        noidung += gio;
-                        noidung += '</div>';
-                        noidung += '</div>';
-
-                        noidung += '</li>';
-                        $('.cacgio2').append(noidung); // thêm ngày mới vào
-                        $('#gio').val(''); // xoa ô input
+                    .done(function(response) {
+                        // Kiểm tra response từ server
+                        if (response && response.success === true) {
+                            // Thành công - thêm giờ chiếu mới vào danh sách
+                            var id_calendar = response.id_calendar;
+                            noidung = '<li class="list-group-item">';
+                            noidung += '<div class="thaotac text-xs-right">';
+                            noidung += '<a data-href="'+id_calendar+'" class="nutedit btn btn-danger"> <i class="fa fa-pencil"></i></a>';
+                            noidung += ' <a data-href="'+id_calendar+'" class="nutxoa btn btn-warning"> <i class="fa fa-remove"></i></a>';
+                            noidung += '</div>';
+                            noidung += '<div class="jquery_button text-xs-right hidden-xs-up">';
+                            noidung += '<a data-href="'+id_calendar+'" class="nutluu btn btn-success">LƯU</a>';
+                            noidung += '</div>';
+                            noidung += '<div>';
+                            noidung += '<div class="jquery_gioedit hidden-xs-up">';
+                            noidung += '<input type="time" name="gioedit" id="gioedit" class="form-control gioedit">';
+                            noidung += '</div>';
+                            noidung += '<div class="giochuaedit">';
+                            noidung += gio;
+                            noidung += '</div>';
+                            noidung += '</div>';
+                            noidung += '</li>';
+                            $('.cacgio2').append(noidung); // thêm giờ mới vào
+                            $('#gio').val(''); // xoa ô input
+                        } else {
+                            // Lỗi - hiển thị thông báo
+                            var errorMsg = response && response.message ? response.message : 'Có lỗi xảy ra khi thêm giờ chiếu!';
+                            alert(errorMsg);
+                        }
+                    })
+                    .fail(function(xhr, status, error) {
+                        // Xử lý lỗi AJAX
+                        console.error('AJAX Error:', status, error);
+                        try {
+                            var response = JSON.parse(xhr.responseText);
+                            if (response && response.message) {
+                                alert(response.message);
+                            } else {
+                                alert('Có lỗi xảy ra khi thêm giờ chiếu!');
+                            }
+                        } catch(e) {
+                            alert('Có lỗi xảy ra khi thêm giờ chiếu!');
+                        }
                     });
-                    
-
-                    
                 });
 
                 //bắt đầu jquery nút xoá

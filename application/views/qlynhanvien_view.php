@@ -15700,7 +15700,7 @@ text-align:center;
 
 
       <!-- User Menu-->
-      <li><a class="app-nav__item" href="<?php echo base_url(); ?>index.php/login_register/indexlogin" style="margin-top:3px"><i >Đăng xuất</i> </a>
+      <li><a class="app-nav__item" href="<?php echo base_url(); ?>index.php/Index_controller" style="margin-top:3px"><i >Trở về</i> </a>
 
       </li>
     </ul>
@@ -15708,7 +15708,7 @@ text-align:center;
   <!-- Sidebar menu-->
   <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
   <aside class="app-sidebar">
-    <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="<?php echo base_url(); ?>images/logo-lg.png" width="50px"
+    <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="<?php echo base_url(); ?>images/logo_vstar.png" width="200px"
         alt="User Image">
       <div>
         <p class="app-sidebar__user-name" style="color: blue;"><b>XIN CHÀO</b></p>
@@ -15787,6 +15787,11 @@ text-align:center;
 
                 </tbody>
               </table>
+              <?php if(isset($pagination_links)): ?>
+              <div class="pagination-wrapper" style="margin-top: 20px; text-align: center;">
+                <?php echo $pagination_links; ?>
+              </div>
+              <?php endif; ?>
             </div>
           </div>
         </div>

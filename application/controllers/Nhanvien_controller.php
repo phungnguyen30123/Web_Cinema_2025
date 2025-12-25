@@ -21,11 +21,46 @@ class Nhanvien_controller extends MY_Controller {
 
     public function index()
     {
-        $this->load->model('showPhim_model');       
-        $phim = $this->showPhim_model->getDatabasePhim();
-        $data = array('dulieutucontroller' => $phim);
+        $this->load->model('showPhim_model');
+        $this->load->library('pagination');
+        
+        // Cấu hình phân trang
+        $config['base_url'] = site_url($this->router->class . '/' . $this->router->method);
+        $config['total_rows'] = $this->showPhim_model->countPhim();
+        $config['per_page'] = 10;
+        $config['uri_segment'] = 3;
+        $config['use_page_numbers'] = TRUE;
+        $config['first_link'] = 'Đầu';
+        $config['last_link'] = 'Cuối';
+        $config['next_link'] = '&gt;';
+        $config['prev_link'] = '&lt;';
+        $config['full_tag_open'] = '<ul class="pagination">';
+        $config['full_tag_close'] = '</ul>';
+        $config['first_tag_open'] = '<li class="page-item">';
+        $config['first_tag_close'] = '</li>';
+        $config['last_tag_open'] = '<li class="page-item">';
+        $config['last_tag_close'] = '</li>';
+        $config['next_tag_open'] = '<li class="page-item">';
+        $config['next_tag_close'] = '</li>';
+        $config['prev_tag_open'] = '<li class="page-item">';
+        $config['prev_tag_close'] = '</li>';
+        $config['cur_tag_open'] = '<li class="page-item active"><span class="page-link">';
+        $config['cur_tag_close'] = '</span></li>';
+        $config['num_tag_open'] = '<li class="page-item">';
+        $config['num_tag_close'] = '</li>';
+        $config['attributes'] = array('class' => 'page-link');
+        
+        $this->pagination->initialize($config);
+        
+        $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 1;
+        $offset = ($page - 1) * $config['per_page'];
+        
+        $phim = $this->showPhim_model->getDatabasePhimPaginated($config['per_page'], $offset);
+        $data = array(
+            'dulieutucontroller' => $phim,
+            'pagination_links' => $this->pagination->create_links()
+        );
 
-        // Không cần kiểm tra session vip2 nữa vì MY_Controller đã lo
         $this->load->view('qlyphim_view', $data);
     }
 
@@ -43,8 +78,44 @@ class Nhanvien_controller extends MY_Controller {
     public function index_xacnhanve()
     {
         $this->load->model('seat_model');
-        $booking = $this->seat_model->showBooking();
-        $data = array('dulieubookingtucon' => $booking);
+        $this->load->library('pagination');
+        
+        // Cấu hình phân trang
+        $config['base_url'] = site_url($this->router->class . '/' . $this->router->method);
+        $config['total_rows'] = $this->seat_model->countBooking();
+        $config['per_page'] = 10;
+        $config['uri_segment'] = 3;
+        $config['use_page_numbers'] = TRUE;
+        $config['first_link'] = 'Đầu';
+        $config['last_link'] = 'Cuối';
+        $config['next_link'] = '&gt;';
+        $config['prev_link'] = '&lt;';
+        $config['full_tag_open'] = '<ul class="pagination">';
+        $config['full_tag_close'] = '</ul>';
+        $config['first_tag_open'] = '<li class="page-item">';
+        $config['first_tag_close'] = '</li>';
+        $config['last_tag_open'] = '<li class="page-item">';
+        $config['last_tag_close'] = '</li>';
+        $config['next_tag_open'] = '<li class="page-item">';
+        $config['next_tag_close'] = '</li>';
+        $config['prev_tag_open'] = '<li class="page-item">';
+        $config['prev_tag_close'] = '</li>';
+        $config['cur_tag_open'] = '<li class="page-item active"><span class="page-link">';
+        $config['cur_tag_close'] = '</span></li>';
+        $config['num_tag_open'] = '<li class="page-item">';
+        $config['num_tag_close'] = '</li>';
+        $config['attributes'] = array('class' => 'page-link');
+        
+        $this->pagination->initialize($config);
+        
+        $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 1;
+        $offset = ($page - 1) * $config['per_page'];
+        
+        $booking = $this->seat_model->showBookingPaginated($config['per_page'], $offset);
+        $data = array(
+            'dulieubookingtucon' => $booking,
+            'pagination_links' => $this->pagination->create_links()
+        );
 
         $this->load->view('xacnhanve_view', $data);
     }

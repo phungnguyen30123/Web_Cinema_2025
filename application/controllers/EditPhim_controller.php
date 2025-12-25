@@ -7,11 +7,14 @@
  * @property CI_Input $input           // Nếu bạn dùng $this->input (Lỗi cũ)
  */
 
-class EditPhim_controller extends CI_Controller {
+// Kế thừa từ MY_Controller để tự động bảo vệ đăng nhập
+class EditPhim_controller extends MY_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
+		// Cho phép cả Staff và Admin vào khu vực quản lý phim
+		$this->restrict_to(['staff', 'admin']);
 	}
 
 	public function index()

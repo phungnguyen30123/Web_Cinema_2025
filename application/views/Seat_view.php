@@ -37,14 +37,18 @@
 
    <body>
     <div class="wrapper place-wrapper">
-        <!-- Banner -->
-           <div class="banner-top">
-        <img alt='top banner' src="<?php echo base_url(); ?>images/banner.png" style="height:90px; width:1600px">
-    </div>
- <?php require('header_view.php') ?>
+        <?php require('header_view.php') ?>
 
  
 
+<!-- Hiển thị thông báo lỗi nếu có -->
+<?php if ($this->session->flashdata('error_msg')): ?>
+    <div class="container" style="margin-top: 20px; margin-bottom: 20px;">
+        <div class="alert alert-danger" style="background-color: #f8d7da; color: #721c24; padding: 15px; border: 1px solid #f5c6cb; border-radius: 4px;">
+            <i class="fa fa-exclamation-circle"></i> <?php echo $this->session->flashdata('error_msg'); ?>
+        </div>
+    </div>
+<?php endif; ?>
 
 <!-- Main content -->
 <?php foreach ($dulieulichtucontroller as $valuelich): ?>
@@ -433,7 +437,7 @@
                 </div>
                 <div class="col-xs-12 col-md-6">
                     <div class="footer-info">
-                        <p class="heading-special--small">YOUNET MEDIA<br><span class="title-edition">in the social media</span></p>
+                        <p class="heading-special--small">V-STAR MEDIA<br><span class="title-edition">in the social media</span></p>
 
                         <div class="social">
                             <a href='https://www.facebook.com/vku.udn.vn' class="social__variant fa fa-facebook"></a>
@@ -516,6 +520,9 @@
     <script src="<?php echo base_url(); ?>js/custom.js"></script>
     <script type='text/javascript'>
         $(document).ready(function() {
+            //var ghedaban = $('.ghedaban').val();
+            // // console.log($ghedaban);
+            //var ghedabanmang = ghedaban.split(', ');
             var ghedaban = $('.ghedaban').val() || '';
             // Normalize into an array without extra spaces
             var ghedabanmang = [];

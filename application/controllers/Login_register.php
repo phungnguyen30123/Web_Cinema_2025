@@ -26,10 +26,26 @@ class Login_register extends CI_Controller
 
     public function login()
     {
+        // Kiểm tra nếu là AJAX request (từ popup)
+        $is_ajax = $this->input->is_ajax_request() || 
+                   !empty($this->input->post('ajax')) ||
+                   (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
 
         //lấy dữ liệu từ view
         $email = $this->input->post('user-email');
         $password = $this->input->post('user-password');
+
+        // Kiểm tra dữ liệu đầu vào
+        if (empty($email) || empty($password)) {
+            if ($is_ajax) {
+                header('Content-Type: application/json');
+                echo json_encode(array('success' => false, 'message' => 'Vui lòng nhập đầy đủ email và mật khẩu!'));
+                return;
+            }
+            $this->session->set_flashdata('error_msg', 'Vui lòng nhập đầy đủ email và mật khẩu!');
+            redirect('Login_register/indexlogin');
+            return;
+        }
 
         //$_SESSION['mail'] = $email;
 
@@ -37,12 +53,24 @@ class Login_register extends CI_Controller
         $this->load->model('login_model');
         $result = $this->login_model->getDatabyEmail($email);
 
+        // Kiểm tra xem email có tồn tại không
+        if (empty($result)) {
+            if ($is_ajax) {
+                header('Content-Type: application/json');
+                echo json_encode(array('success' => false, 'message' => 'Email hoặc mật khẩu không đúng!'));
+                return;
+            }
+            $this->session->set_flashdata('error_msg', 'Email hoặc mật khẩu không đúng!');
+            redirect('Login_register/indexlogin');
+            return;
+        }
+
         // 		echo "<pre>";
         // 		print_r($result);
         // 		echo "</pre>";
         // //		exit;
 
-
+        $login_success = false;
         foreach ($result as $value) {
             // Sửa lại logic trong hàm login() của Login_register.php
             if ($value['password'] == md5($password)) {
@@ -57,10 +85,50 @@ class Login_register extends CI_Controller
                     'logged_in'     => TRUE
                 ];
                 $this->session->set_userdata($session_data);
+                $login_success = true;
 
+                // Nếu là AJAX request, trả về JSON
+                if ($is_ajax) {
+                    $redirect_after_login = $this->input->post('redirect_after_login');
+                    header('Content-Type: application/json');
+                    echo json_encode(array(
+                        'success' => true, 
+                        'message' => 'Đăng nhập thành công!',
+                        'redirect_url' => !empty($redirect_after_login) ? $redirect_after_login : base_url() . 'index.php/Index_controller'
+                    ));
+                    return;
+                }
 
-                redirect('Index_controller');
+                // Kiểm tra xem có redirect URL không (từ form đăng nhập)
+                $redirect_after_login = $this->input->post('redirect_after_login');
+                if (!empty($redirect_after_login)) {
+                    // Kiểm tra URL có hợp lệ và thuộc cùng domain không (bảo mật)
+                    $base_url = base_url();
+                    if (strpos($redirect_after_login, $base_url) === 0 || strpos($redirect_after_login, '/') === 0) {
+                        // URL hợp lệ, redirect đến đó
+                        redirect($redirect_after_login);
+                        return;
+                    } else {
+                        // URL không hợp lệ, redirect về trang chủ
+                        redirect('Index_controller');
+                        return;
+                    }
+                } else {
+                    redirect('Index_controller');
+                    return;
+                }
             }
+        }
+        
+        // Nếu không đăng nhập thành công (password sai)
+        if (!$login_success) {
+            if ($is_ajax) {
+                header('Content-Type: application/json');
+                echo json_encode(array('success' => false, 'message' => 'Email hoặc mật khẩu không đúng!'));
+                return;
+            }
+            $this->session->set_flashdata('error_msg', 'Email hoặc mật khẩu không đúng!');
+            redirect('Login_register/indexlogin');
         }
     }
 

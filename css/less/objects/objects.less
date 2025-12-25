@@ -46,23 +46,34 @@
 	clear: both;
 }
 
+.header-wrapper > .container{
+	height: 100%;
+	display: flex;
+	align-items: center;
+}
+
+
 .col--remove{
 	padding: 0;
 }
 
 .header-wrapper{
-	background: #2e292e;
+	background: @color-null;
 	position: relative;
 	z-index: 120;
-	height: 55px;
+	height: 90px;
+	padding: 20px 0;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header-wrapper--home{
-	background: rgba(46, 41, 46, 0.8);
+	background: @color-null;
 	position: absolute;
-	height: 55px;
+	height: 90px;
 	width: 100%;
-	z-index: 101;
+	z-index: 100;
+	padding: 20px 0;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .footer-wrapper{
@@ -290,14 +301,18 @@
 
 //logo container with position option
 .logo{
-	position: absolute;
-	top: 16px;
+	position: relative;
 	left: 15px;
 	z-index: 2;
+	display: block;
+	align-self: center;
 
 	img{
-		width: 111px;
-		height: 17px;
+		width: 180px;
+		height: auto;
+		max-height: 50px;
+		display: block;
+		vertical-align: middle;
 	}
 }
 
@@ -305,23 +320,36 @@
 #navigation-box{
 	background-color: transparent;
 	margin: 0;
-	min-height: 55px;
+	min-height: 90px;
+	display: flex;
+	align-items: center;
 }
 
 ul#navigation{
 	//float: none;
 	margin-right: 280px;
+	display: flex;
+	align-items: center;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+ul#navigation > li {
+	padding-bottom: 0;
+	display: flex;
+	align-items: center;
 }
 
 ul#navigation a{
 	font: @font-size @secondary-font;
-	color: #b4b1b2;
+	color: @color-main;
 
 	.transition(0.3s);
 }
 
 ul#navigation a:hover{
-	color: @color-null;
+	color: @color-red;
 }
 
 // heading section
@@ -563,6 +591,11 @@ ul#navigation a:hover{
 
 .btn--book{
 	padding: 7px 17px;
+}
+
+#navigation-box .btn--book{
+	float: none;
+	align-self: center;
 }
 
 .btn--wide{
@@ -2303,14 +2336,30 @@ ul#navigation li.mega-menu__nav-item{
 	border: none;
 	padding-left: 23px;
 	
+	a{
+		color: #b4b1b2;
+		display: block;
+		padding: 5px 0;
+		text-decoration: none;
+		line-height: 1.5;
+		.transition(0.3s);
+	}
+	
+	a:hover{
+		color: @color-red;
+	}
+	
 	&:before{
 		content: "\f111";
 		color: #b4b1b2;
 		font: 5px @icon-font;
 			
 		position: absolute;
-		top: 14px;
+		top: 50%;
 		left: 0;
+		-webkit-transform: translateY(-50%);
+		-ms-transform: translateY(-50%);
+		transform: translateY(-50%);
 
 		.transition(0.3s);
 	}
@@ -2325,14 +2374,30 @@ ul#navigation li.mega-menu__nav-item{
 	border: none;
 	padding-left: 23px;
 	
+	a{
+		color: #b4b1b2;
+		display: block;
+		padding: 5px 0;
+		text-decoration: none;
+		line-height: 1.5;
+		.transition(0.3s);
+	}
+	
+	a:hover{
+		color: @color-red;
+	}
+	
 	&:before{
 		content: "\f111";
 		color: #b4b1b2;
 		font: 5px @icon-font;
 			
 		position: absolute;
-		top: 14px;
+		top: 50%;
 		left: 0;
+		-webkit-transform: translateY(-50%);
+		-ms-transform: translateY(-50%);
+		transform: translateY(-50%);
 
 		.transition(0.3s);
 	}
@@ -3401,6 +3466,7 @@ cursor: pointer;
 
 		&:hover{
 			background-color: @color-red;
+			color: @color-null;
 		}
 
 		&:before{
@@ -3435,6 +3501,7 @@ cursor: pointer;
 
 	.time-select__item.active{
 		background-color: @color-red;
+		color: @color-null;
 
 		&:after{
 			background-image: url(../images/components/bg-time-hover.png);
@@ -5166,6 +5233,17 @@ cursor: pointer;
     padding:0;
     max-height: 500px;
     overflow: hidden;
+    z-index: 1;
+}
+
+.bannercontainer .rev_slider_wrapper {
+    position: relative;
+    z-index: 1;
+}
+
+// Đảm bảo slider không bị header che khi header có position absolute
+.header-wrapper--home ~ .bannercontainer {
+    padding-top: 90px;
 }
 
 	//arrows
@@ -5687,7 +5765,7 @@ cursor: pointer;
 //movie example (part)
 .movie-best{
 	position: relative;
-	margin-top: -100px;
+	margin-top: 90px;
 	z-index: 50;
 
 

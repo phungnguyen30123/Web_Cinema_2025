@@ -39,85 +39,79 @@
         .btn {
             margin: 0 2px;
         }
+        .card.bg-primary .btn {
+            margin: 0 3px;
+        }
+        .btn i {
+            display: inline-block;
+            font-size: 1em;
+        }
     </style>
 </head>
 <body>
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-6">
-                <div class="jumbotron jumbotron-fluid text-xs-center">
+                <div class="jumbotron jumbotron-fluid text-center">
                     <div class="container">
                         <?php foreach ($dulieutucontrollerTit as $valuephim): ?>
                             <h1 class="display-5">Thêm ngày </h1>
                             <input type="hidden" name="id_movie" id="id_movie" value="<?= $valuephim['id'] ?>">
                             <p class="lead"><?= $valuephim['id'] ?>: <?= $valuephim['title']; ?></p>
-                        
+                        <?php endforeach; ?>
                     </div>
                 </div>
                 <!-- <form action=" //echo base_url(); ?>/tin/themdanhmuc" method="post"> -->
-                    <fieldset class="form-group">
-                        <label for="formGroupExampleInput">Chọn ngày</label>
-                        <input name="day" type="date" class="form-control" id="day" x>
-                    </fieldset>
-                    <fieldset class="form-group">
-                        <input type="button" class="form-control" id="nutthemngay" value="Thêm ngày">
-                    </fieldset>
+                    <div class="mb-3">
+                        <label for="day" class="form-label">Chọn ngày</label>
+                        <input name="day" type="date" class="form-control" id="day">
+                    </div>
+                    <div class="mb-3">
+                        <input type="button" class="btn btn-primary" id="nutthemngay" value="Thêm ngày">
+                    </div>
                     <!-- </form> -->
                 </div> <!-- end cot trai -->
                 <div class="col-sm-6">
-                    <div class="jumbotron jumbotron-fluid text-xs-center cacngay">
+                    <div class="jumbotron jumbotron-fluid text-center cacngay">
                         <div class="container">
                             <h1 class="display-5">Danh sách ngày chiếu phim </h1>
                         </div>
                     </div>
                     <?php foreach ($dulieutucontroller as $value): ?>
-
-
                         <?php
-                                            $daychuadoi = $value["day"];
-                                            $daydadoi = date("d/m/Y", strtotime($daychuadoi));
-                                            ?>
-                        <div class="card card-inverse card-primary mb-3 text-center">
-                            <div class="card-block">
-                                <div class="thaotac text-xs-right">
+                        $daychuadoi = $value["day"];
+                        $daydadoi = date("d/m/Y", strtotime($daychuadoi));
+                        $id_movie = $value['id_movie'];
+                        ?>
+                        <div class="card bg-primary text-white mb-3 text-center">
+                            <div class="card-body">
+                                <div class="thaotac text-end">
 
-                                    <a data-href="<?php echo $daychuadoi ?>" class="nutedit btn btn-danger"> <i class="fa fa-pencil"></i></a>
-                                    <a data-href="<?php echo $daychuadoi ?>" class="nutxoa btn btn-warning"> <i class="fa fa-remove"></i></a>
-                                    <a href="../indexGio/<?= $value['id_movie'] ?>/<?php echo $daychuadoi ?>" class="nutxem btn btn-danger"> <i class="fa fa-eye"></i></a>
+                                    <a data-href="<?php echo $daychuadoi ?>" class="nutedit btn btn-danger"> <i class="fas fa-edit"></i></a>
+                                    <a data-href="<?php echo $daychuadoi ?>" class="nutxoa btn btn-warning"> <i class="fas fa-times"></i></a>
+                                    <a href="../indexGio/<?= $value['id_movie'] ?>/<?php echo $daychuadoi ?>" class="nutxem btn btn-danger"> <i class="fas fa-eye"></i></a>
 
                                 </div>
 
-                                <div class="jquery_button text-xs-right hidden-xs-up">
-
+                                <div class="jquery_button text-end hidden-xs-up">
                                     <a href="" class="nutluu btn btn-success">LƯU</a>
                                 </div>
 
-                                <!--<div class="jquery_button text-xs-right hidden-xs-up">
-                                    <a href="" class="btn btn-success nutluu"> Lưu </a>
-
-                                </div>-->
-
-                                <h4 class="card-blockquote">
-
-                                    <fieldset class="form-group jquery_dayedit hidden-xs-up">
-                                        
-                                        <input type="date" class="form-control dayedit" name="dayedit" value= "<?= $daychuadoi ?>">
-                                    </fieldset>
-
+                                <h4 class="card-title mt-3">
+                                    <div class="form-group jquery_dayedit hidden-xs-up mb-3">
+                                        <input type="date" class="form-control dayedit" name="dayedit" value="<?= $daychuadoi ?>">
+                                    </div>
 
                                     <div class="daychuaedit">
-                                        <input type="hidden" name="daychuaedit" id="daychuaedit" class="daychuaedit" value="<?= $daychuadoi ?>">
-
+                                        <input type="hidden" name="daychuaedit" class="daychuaedit" value="<?= $daychuadoi ?>">
                                         <?php echo $daydadoi ?>
-                                        
                                     </div>     
                                 </h4>
 
 
                             </div>
                         </div> <!-- het mot danh mục -->
-                    <?php endforeach ?>
-                    <?php endforeach ?>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>
@@ -136,7 +130,8 @@
 
 
             $(function(){
-                var duongdan = '<?php echo base_url() ?>' ;
+                var duongdan = '<?php echo base_url() ?>';
+                var id_movie_js = $('#id_movie').val();
 
                 //sự kiện nút thêm ngav
                 $('#nutthemngay').click(function(event) {
@@ -182,24 +177,23 @@
                         //dùng jquery thêm nội dung thêm mới
 
                         
-                        noidung = '<div class="card card-inverse card-primary mb-3 text-center">';
-                        noidung += '<div class="card-block">';
-                        noidung += '<div class="thaotac text-xs-right">';
-                        noidung += '<a data-href="'+res+'" class="nutedit btn btn-danger"> <i class="fa fa-pencil"></i></a>';
-                        noidung += '<a data-href="'+res+'" class="nutxoa btn btn-warning"> <i class="fa fa-remove"></i></a>';
-                        noidung += '<a href="../indexGio/<?= $value['id_movie'] ?>/'+day+'" class="nutxem btn btn-danger"> <i class="fa fa-eye"></i></a>';
+                        noidung = '<div class="card bg-primary text-white mb-3 text-center">';
+                        noidung += '<div class="card-body">';
+                        noidung += '<div class="thaotac text-end">';
+                        noidung += '<a data-href="'+res+'" class="nutedit btn btn-danger"> <i class="fas fa-edit"></i></a>';
+                        noidung += '<a data-href="'+res+'" class="nutxoa btn btn-warning"> <i class="fas fa-times"></i></a>';
+                        noidung += '<a href="../indexGio/'+id_movie_js+'/'+day+'" class="nutxem btn btn-danger"> <i class="fas fa-eye"></i></a>';
                         noidung += '</div>';
-                       //noidung += '<div class="jquery_button text-xs-right hidden-xs-up">';
-                        //noidung += '<a href="" class="btn btn-success nutluu"> Lưu </a>';
-                        noidung += '<div class="jquery_button text-xs-right hidden-xs-up">';
+                        noidung += '<div class="jquery_button text-end hidden-xs-up">';
                         noidung += '<a href="" class="nutluu btn btn-success">LƯU</a>';
                         noidung += '</div>';
                         
-                        noidung += '<h4 class="card-blockquote">';
-                        noidung += '<fieldset class="form-group jquery_dayedit hidden-xs-up">';
-                        noidung += '<input type="date" class="form-control dayedit" name="dayedit" value= "<?= $daychuadoi ?>">';
-                        noidung += '</fieldset>';
+                        noidung += '<h4 class="card-title mt-3">';
+                        noidung += '<div class="form-group jquery_dayedit hidden-xs-up mb-3">';
+                        noidung += '<input type="date" class="form-control dayedit" name="dayedit" value="'+day+'">';
+                        noidung += '</div>';
                         noidung += '<div class="daychuaedit">';
+                        noidung += '<input type="hidden" name="daychuaedit" class="daychuaedit" value="'+day+'">';
                         noidung += dout;
                         noidung += '</div>';
                         noidung += '</h4>';

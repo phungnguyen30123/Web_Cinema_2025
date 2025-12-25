@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=   , initial-DCale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phim đang chiếu</title>
 
     <!-- Mobile Specific Metas-->
-        <meta name="viewport" content="width=device-width, initial-DCale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="telephone=no" name="format-detection">
     
     <!-- Fonts -->
@@ -34,20 +34,11 @@
         <link href="<?php echo base_url(); ?>css/style.css?v=1" rel="stylesheet" />
 
         <!-- Modernizr --> 
-        <DCript src="<?php echo base_url(); ?>js/external/modernizr.custom.js"></DCript>
+        <script src="<?php echo base_url(); ?>js/external/modernizr.custom.js"></script>
 </head>
 <body>
 
      <div class="wrapper">
-        <!-- Banner -->
-
-       <!-- Banner -->
-       <!-- <div class="banner-top">
-        <img alt='top banner' src="images/banners/jnj.jpg" style="height:150px; width:1600px">
-    </div> -->
-<div class="banner-top">
-        <img alt='top banner' src="<?php echo base_url(); ?>images/banner.png" style="height:90px; width:1600px">
-    </div>
         <!-- Header section -->
         <?php require('header_view.php') ?>
 
@@ -87,7 +78,7 @@
                     </div>
 
                     <div class="col-sm-9 col-md-10 col-lg-10 movie__about">
-                            <a href="../Movie_page_controller/showinfophim/<?php echo $value['id'] ?>" class="movie__title link--huge"><?php echo $value['title'] ?></a>
+                            <a href="<?php echo base_url(); ?>index.php/Movie_page_controller/showinfophim/<?php echo $value['id'] ?>" class="movie__title link--huge"><?php echo $value['title'] ?></a>
 
                             <p class="movie__time"><?php echo $value['duration'] ?></p>
 
@@ -103,7 +94,7 @@
                             </div>
 
                             <div class="preview-footer">
-                                <div class="movie__rate"><div class="DCore"></div><span class="movie__rate-number">170 lượt bình chọn</span> <span class="movie__rating">5.0</span></div>
+                                <div class="movie__rate"><div class="score"></div><span class="movie__rate-number">170 lượt bình chọn</span> <span class="movie__rating">5.0</span></div>
                                 
 
                             </div>
@@ -149,10 +140,10 @@
                                 <li class="time-select__item" data-time='13:00'>13:00</li>
                                 <li class="time-select__item" data-time='15:00'>15:00</li>
                                 <li class="time-select__item" data-time='17:00'>17:00</li>
-                                <li class="time-select__item" data-time='19:0'>19:00</li>
-                                <li class="time-select__item" data-time='21:0'>21:00</li>
-                                <li class="time-select__item" data-time='23:0'>23:00</li>
-                                <li class="time-select__item" data-time='01:0'>01:00</li>
+                                <li class="time-select__item" data-time='19:00'>19:00</li>
+                                <li class="time-select__item" data-time='21:00'>21:00</li>
+                                <li class="time-select__item" data-time='23:00'>23:00</li>
+                                <li class="time-select__item" data-time='01:00'>01:00</li>
                             </ul>
                         </div>
 
@@ -215,7 +206,7 @@
                 </div>
                 <div class="col-xs-12 col-md-6">
                     <div class="footer-info">
-                        <p class="heading-special--small">YOUNET MEDIA<br><span class="title-edition">in the social media</span></p>
+                        <p class="heading-special--small">V-STAR MEDIA<br><span class="title-edition">in the social media</span></p>
 
                         <div class="social">
                             <a href='https://www.facebook.com/vku.udn.vn' class="social__variant fa fa-facebook"></a>

@@ -41,11 +41,6 @@
 
    <body>
     <div class="wrapper place-wrapper">
-        <!-- Banner -->
-         <div class="banner-top">
-        <img alt='top banner' src="<?php echo base_url(); ?>images/banner.png" style="height:90px; width:1600px">
-    </div>
-
         <!-- Header section -->
         <?php require('header_view.php') ?>
 
@@ -71,7 +66,7 @@
                         <span class="ticket__item">Thành viên: <strong class="ticket__number"><?= $valueuser['fullname']; ?></strong></span>
                         <span class="ticket__item ticket__date"><?= $valueve[4]; ?></span>
                         <span class="ticket__item ticket__time"><?= $valueve[5]; ?></span>
-                        <span class="ticket__item">Rạp: <span class="ticket__cinema">YouNet Media</span></span>
+                        <span class="ticket__item">Rạp: <span class="ticket__cinema">V-STAR MEDIA</span></span>
                         <span class="ticket__item">Trung tâm giải trí Helio: <span class="ticket__hall">Tầng 1</span></span>
                         <span class="ticket__item ticket__price">Giá: <strong class="ticket__cost"><?= $valueve[1]; ?></strong></span>
                     </div>
@@ -120,7 +115,7 @@
                 </div>
                 <div class="col-xs-12 col-md-6">
                     <div class="footer-info">
-                        <p class="heading-special--small">YOUNET MEDIA<br><span class="title-edition">in the social media</span></p>
+                        <p class="heading-special--small">V-STAR MEDIA<br><span class="title-edition">in the social media</span></p>
 
                         <div class="social">
                             <a href='https://www.facebook.com/vku.udn.vn' class="social__variant fa fa-facebook"></a>

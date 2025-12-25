@@ -42,6 +42,19 @@ class seat_model extends CI_Model {
 		$this->db->order_by('id_ve', 'desc');
 		return $this->db->get('booking')->result_array();
 	}
+
+	public function showBookingPaginated($limit, $offset)
+	{
+		$this->db->select('*');
+		$this->db->order_by('id_ve', 'desc');
+		$this->db->limit($limit, $offset);
+		return $this->db->get('booking')->result_array();
+	}
+
+	public function countBooking()
+	{
+		return $this->db->count_all('booking');
+	}
 	public function getSeat($idc)
 	{
 		$this->db->select('seats');

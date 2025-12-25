@@ -19,6 +19,20 @@ class Showphim_model extends CI_Model {
 
 		return $ketquaphim;
 	}
+
+	public function getDatabasePhimPaginated($limit, $offset)
+	{
+		$this->db->select('*'); 
+		$this->db->order_by('id', 'desc');
+		$this->db->limit($limit, $offset);
+		$ketquaphim = $this->db->get('movie');
+		return $ketquaphim->result_array();
+	}
+
+	public function countPhim()
+	{
+		return $this->db->count_all('movie');
+	}
 	public function getDatabasePhimDC()
 	{
 		$ketquaPhimDC = $this->db->get_where('movie', 'DATEDIFF(CURRENT_DATE, open_date) >0 and DATEDIFF(CURRENT_DATE, open_date) <30');

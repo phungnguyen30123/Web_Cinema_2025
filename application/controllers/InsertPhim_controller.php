@@ -4,14 +4,17 @@
  * @property CI_DB_mysqli_driver $db     // <-- Dùng driver cụ thể này
  * @property lich_model $lich_model 
  * @property insertPhim_model $insertPhim_model 
- * @property CI_Loader $load           
- * @property CI_Input $input           
+ * @property CI_Loader $load           
+ * @property CI_Input $input           
  */
-class InsertPhim_controller extends CI_Controller {
+// Kế thừa từ MY_Controller để tự động bảo vệ đăng nhập
+class InsertPhim_controller extends MY_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
+		// Cho phép cả Staff và Admin vào khu vực quản lý phim
+		$this->restrict_to(['staff', 'admin']);
 	}
 
 	public function index()

@@ -7,7 +7,9 @@
  * @property CI_Input $input
  * @property CI_Session $session
  */
-class seat_controller extends CI_Controller {
+
+// Kế thừa từ MY_Controller để tự động bảo vệ đăng nhập
+class seat_controller extends MY_Controller {
 
 	public function __construct()
 	{
@@ -38,12 +40,8 @@ class seat_controller extends CI_Controller {
 
 		// 
 		// var_dump($dulieus);
-		if ($this->session->userdata('vipmember')) {
-			$this->load->view('Seat_view',$dulieu+$dulieus);
-			
-		}else {
-			redirect('Login_register/indexlogin','refresh');
-		}
+		// Không cần kiểm tra session vipmember nữa vì MY_Controller đã lo
+		$this->load->view('Seat_view',$dulieu+$dulieus);
 		
 	}
 	// public function addseat()
@@ -84,6 +82,17 @@ class seat_controller extends CI_Controller {
 		$ngay = $this->input->get_post('ngay');
 		$gio = $this->input->get_post('gio');
 		
+		// Kiểm tra nếu chưa chọn ghế nào
+		if (empty($choosen_sits) || empty($choosen_number) || $choosen_number == '0' || $choosen_number == 0) {
+			$this->session->set_flashdata('error_msg', 'Vui lòng chọn ít nhất một ghế trước khi thanh toán!');
+			if (!empty($id_calendar)) {
+				redirect('seat_controller/index_seat/' . $id_calendar);
+			} else {
+				redirect('Index_controller');
+			}
+			return;
+		}
+		
 		$dulieutucontroller = array(array(
 			$id_calendar,
 			$choosen_number,
@@ -103,12 +112,8 @@ class seat_controller extends CI_Controller {
 		// // $dulieughetucontroller = array('dulieutucontroller' => $dulieughetucontroller);
 		// echo "<pre>";
 		// var_dump($dulieu);
-		if ($this->session->userdata('vipmember')) {
-			$this->load->view('Thanhtoan_view', $dulieu);
-			
-		}else {
-			redirect('Login_register/indexlogin','refresh');
-		}
+		// Không cần kiểm tra session vipmember nữa vì MY_Controller đã lo
+		$this->load->view('Thanhtoan_view', $dulieu);
 		
 
 
@@ -139,12 +144,8 @@ class seat_controller extends CI_Controller {
 	));
 		$dulieuuser = array('dulieuusertucontroller'=>$dulieuuser);
 		$dulieu = array('dulieuvetucontroller'=>$dulieutucontroller);
-		if ($this->session->userdata('vipmember')) {
-			$this->load->view('Ticket_view', $dulieu+$dulieuuser);
-			
-		}else {
-			redirect('Login_register/indexlogin','refresh');
-		}
+		// Không cần kiểm tra session vipmember nữa vì MY_Controller đã lo
+		$this->load->view('Ticket_view', $dulieu+$dulieuuser);
 		
 
 

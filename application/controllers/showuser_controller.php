@@ -8,47 +8,42 @@
  * @property CI_Input $input
  * @property CI_Session $session
  */
-// khởi tạo biến sessions
-//session_start();
 
-class showuser_controller extends CI_Controller {
+// Kế thừa từ MY_Controller để tự động bảo vệ đăng nhập
+class showuser_controller extends MY_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->library('session');
 	}
 
 	public function indexshowuser()
 	{	
 		$this->load->model('showuser_model');
-		$dulieu = $this->showuser_model->getuser($_SESSION['id_user']);
+		$id_user = $this->session->userdata('id_user');
+		$dulieu = $this->showuser_model->getuser($id_user);
 		
 		$dulieu = array('dulieucontroller' => $dulieu ); 
-		// echo "<pre>";
-		// var_dump($dulieu);
 
-
-		//biến dữ liệu thành mảng với key = dulieucontroller
-		
-
-		if ($this->session->userdata('vipmember')) {
-			$this->load->view('showuser_view', $dulieu);
-			
-		}else {
-			redirect('Login_register/indexlogin','refresh');
-		}
-
+		// Không cần kiểm tra session vipmember nữa vì MY_Controller đã lo
+		$this->load->view('showuser_view', $dulieu);
 	}
-     public function logout(){
-		if ($this->session->has_userdata('vipmember')) {
-			$this->session->unset_userdata('vipmember');
-			redirect('index_controller','refresh');
-			
-		}
+     
+	public function logout(){
+		// Xóa toàn bộ session (đã được xử lý trong Login_register/logout)
+		// Giữ lại method này để tương thích với các link cũ nếu có
+		redirect('Login_register/logout', 'refresh');
 	}
 	public function edituser($idlayve)
 	{
+		// Kiểm tra quyền: chỉ cho phép user chỉnh sửa thông tin của chính mình
+		$current_user_id = $this->session->userdata('id_user');
+		if ($idlayve != $current_user_id) {
+			$this->session->set_flashdata('error_msg', 'Bạn không có quyền chỉnh sửa thông tin người dùng khác!');
+			redirect('showuser_controller/indexshowuser', 'refresh');
+			return;
+		}
+
 		$this->load->model('showuser_model');
 		$ketqua = $this->showuser_model->editByID($idlayve);
 		$ketqua = array('mangketqua' => $ketqua);
@@ -84,10 +79,16 @@ class showuser_controller extends CI_Controller {
 		var_dump($this->login_model->getdatabase());
 		
 	}
-	
 
-
-
+	public function history()
+	{
+		$this->load->model('showuser_model');
+		$id_user = $this->session->userdata('id_user');
+		$booking_history = $this->showuser_model->getBookingHistory($id_user);
+		
+		$data = array('booking_history' => $booking_history);
+		$this->load->view('booking_history_view', $data);
+	}
  
 }
 

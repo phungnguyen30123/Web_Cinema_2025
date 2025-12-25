@@ -18,6 +18,20 @@ class showadmin_model extends CI_Model {
         return $ketqua;
 	}
 
+	public function getadminPaginated($limit, $offset)
+	{
+		$this->db->select('*');
+		$this->db->order_by('id', 'desc');
+		$this->db->limit($limit, $offset);
+		$ketqua = $this->db->get('user');
+		return $ketqua->result_array();
+	}
+
+	public function countAdmin()
+	{
+		return $this->db->count_all('user');
+	}
+
 	public function deleteuserById($id)
 	{
 		$this->db->where('id', $id);
@@ -32,6 +46,22 @@ class showadmin_model extends CI_Model {
 		$this->db->where('is_admin', '2');
 		return $this->db->get('user') -> result_array();
 			}
+
+	public function getNVPaginated($limit, $offset)
+	{
+		$this->db->select('*');
+		$this->db->where('is_admin', '2');
+		$this->db->order_by('id', 'desc');
+		$this->db->limit($limit, $offset);
+		return $this->db->get('user')->result_array();
+	}
+
+	public function countNV()
+	{
+		$this->db->where('is_admin', '2');
+		$this->db->from('user');
+		return $this->db->count_all_results();
+	}
 
 	public function addnv($e, $mk, $na, $bd, $sdt, $d)
 	{

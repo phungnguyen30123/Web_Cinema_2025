@@ -4,7 +4,7 @@
 <head>
     <!-- Basic Page Needs -->
         <meta charset="utf-8">
-        <title>AMovie</title>
+        <title>V-STAR</title>
         <meta name="description" content="A Template by Gozha.net">
         <meta name="keywords" content="HTML, CSS, JavaScript">
         <meta name="author" content="Gozha.net">
@@ -48,10 +48,6 @@
 
     <div class="wrapper">
         <!-- Header section -->
-        <div class="banner-top">
-            <img alt='top banner' src="<?php echo base_url(); ?>images/banner.png" style="height:90px; width:1600px">
-        </div>
-        
         <?php 
         // Thiết lập class đặc biệt cho trang chủ
         $header_class_extra = 'header-wrapper--home';
@@ -69,7 +65,7 @@
                     <li data-transition="fade" class="slide" data-title=''>
  
                         <!-- SLIDE'S MAIN BACKGROUND IMAGE -->
-                        <img class="rev-slidebg" alt='' src="<?php echo base_url(); ?>images/slides/poste.png">
+                        <img class="rev-slidebg" alt='' src="<?php echo base_url(); ?>images/slides/gdkl.jpg">
 
                <div class="tp-caption slide__name margin-slider" 
                              data-x="right" 
@@ -373,7 +369,7 @@
                     <li data-transition="fade" class="slide" data-title=''>
  
                         <!-- SLIDE'S MAIN BACKGROUND IMAGE -->
-                        <img class="rev-slidebg" alt='' src="<?php echo base_url(); ?>images/slides/post.jpg">
+                        <img class="rev-slidebg" alt='' src="<?php echo base_url(); ?>images/slides/choden.jpg  ">
                         <div class="tp-caption slide__name slide__name--smaller slide__name--specific" 
                           data-x="center" 
                           data-y="160" 
@@ -450,8 +446,11 @@
         <!-- Main content -->
         <section class="container">
             <div class="movie-best">
-                 <div class="col-sm-10 col-sm-offset-1 movie-best__rating">Today Best choice</div>
-                 <div class="col-sm-12 change--col">
+                 <div class="row">
+                     <div class="col-sm-10 col-sm-offset-1 movie-best__rating">Today Best choice</div>
+                 </div>
+                 <div class="row">
+                     <div class="col-sm-12 change--col">
                      <div class="movie-beta__item ">
                         <img alt='' src="<?php echo base_url(); ?>images/movie/acquai.jpg">
                          <span class="best-rate">5.0</span>
@@ -549,7 +548,10 @@
                          </ul>-->
                      </div>
                  </div>
-                <div class="col-sm-10 col-sm-offset-1 movie-best__check">check all movies now playing</div>
+                 </div>
+                <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1 movie-best__check">check all movies now playing</div>
+                </div>
             </div>
 
             
@@ -570,7 +572,7 @@
                                     </a>
                                 </div>
 
-                                <div class="movie__info" style="height:400px">
+                                <div class="movie__info">
                                     <a href="../index.php/Movie_page_controller/showinfophim/<?php echo $value['id'] ?>" class="movie__title link--huge"><?php echo $value['title'] ?></a>
 
                                     <p class="movie__time"><?php echo $value['duration'] ?></p>
@@ -579,9 +581,9 @@
                                     <p></p>
                                     
                                     
-                                    <div class="movie__rate" style="height:90px  ;">
+                                    <div class="movie__rate">
                                         <!-- <div class="score"></div> -->
-                                        <span class="movie__rating" style="margin-top:50px">4.1</span>
+                                        <span class="movie__rating">4.1</span>
                                     </div>               
                                 </div>
                             </div>
@@ -608,17 +610,18 @@
                     <aside class="col-sm-4 col-md-3">
                         <div class="sitebar first-banner--left">
                             <div class="banner-wrap first-banner--left">
-                                <img alt='banner' src="<?php echo base_url(); ?>images/banners/q1.jpg">
+                            <img alt='banner' src="<?php echo base_url(); ?>images/banners/q2.jpg">
+                                
                             </div>
 
                              <div class="banner-wrap">
-                                <img alt='banner' src="<?php echo base_url(); ?>images/banners/par3.jpg">
+                             <img alt='banner' src="<?php echo base_url(); ?>images/banners/q1.jpg">
                             </div>
 
                              
 
                             <div class="promo marginb-sm">
-                              <div class="promo__head">A.Movie app</div>
+                              <div class="promo__head">v-star app</div>
                               <div class="promo__describe">for all smartphones<br> and tablets</div>
                               <div class="promo__content">
                                   <ul>
@@ -667,7 +670,7 @@
                 </div>
                 <div class="col-xs-12 col-md-6">
                     <div class="footer-info">
-                        <p class="heading-special--small">YOUNET MEDIA<br><span class="title-edition">in the social media</span></p>
+                        <p class="heading-special--small">V-STAR MEDIA<br><span class="title-edition">in the social media</span></p>
 
                         <div class="social">
                             <a href='https://www.facebook.com/vku.udn.vn' class="social__variant fa fa-facebook"></a>
@@ -767,6 +770,64 @@
           <script type="text/javascript">
               $(document).ready(function() {
                 init_Home();
+                
+                // Đảm bảo các khối phim có cùng độ cao
+                function equalizeMovieHeights() {
+                    var $movies = $('.movie--test');
+                    if ($movies.length === 0) return;
+                    
+                    // Reset height
+                    $movies.css('height', 'auto');
+                    
+                    // Nhóm các khối theo hàng (mỗi hàng có 2 khối với width: 50%)
+                    var currentRow = [];
+                    var currentTop = null;
+                    var maxHeight = 0;
+                    
+                    $movies.each(function() {
+                        var $this = $(this);
+                        var top = $this.position().top;
+                        
+                        if (currentTop === null || Math.abs(top - currentTop) < 5) {
+                            // Cùng hàng
+                            currentRow.push($this);
+                            currentTop = top;
+                        } else {
+                            // Hàng mới - set height cho hàng cũ
+                            if (currentRow.length > 0) {
+                                maxHeight = 0;
+                                currentRow.forEach(function($item) {
+                                    var height = $item.outerHeight();
+                                    if (height > maxHeight) maxHeight = height;
+                                });
+                                currentRow.forEach(function($item) {
+                                    $item.css('height', maxHeight + 'px');
+                                });
+                            }
+                            // Bắt đầu hàng mới
+                            currentRow = [$this];
+                            currentTop = top;
+                        }
+                    });
+                    
+                    // Set height cho hàng cuối cùng
+                    if (currentRow.length > 0) {
+                        maxHeight = 0;
+                        currentRow.forEach(function($item) {
+                            var height = $item.outerHeight();
+                            if (height > maxHeight) maxHeight = height;
+                        });
+                        currentRow.forEach(function($item) {
+                            $item.css('height', maxHeight + 'px');
+                        });
+                    }
+                }
+                
+                // Chạy khi trang load và khi resize
+                equalizeMovieHeights();
+                $(window).on('resize', function() {
+                    setTimeout(equalizeMovieHeights, 100);
+                });
               });
             </script>
 

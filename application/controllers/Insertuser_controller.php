@@ -5,11 +5,14 @@
  * @property CI_Loader $load
  * @property CI_Input $input
  */
-class Insertuser_controller extends CI_Controller {
+// Kế thừa từ MY_Controller để tự động bảo vệ đăng nhập
+class Insertuser_controller extends MY_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
+		// Chỉ cho phép Admin tạo user mới
+		$this->restrict_to(['admin']);
 	}
 
 	public function index()

@@ -125,7 +125,7 @@ body{
     
     <div class="login">
     <form>
-    <label  aria-hidden="true" ><a href="<?php echo base_url() ?>index.php/Login_register/indexlogin" style="text-decoration: none; ">ĐĂNG NHẬP</a></label>
+    <label  aria-hidden="true" ><a href="<?php echo base_url() ?>index.php/Index_controller?show_login=1" style="text-decoration: none; ">ĐĂNG NHẬP</a></label>
      <button> <button>
     </form>
     </div>

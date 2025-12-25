@@ -47,6 +47,18 @@ class showuser_model extends CI_Model {
 
 	}
 
+	public function getBookingHistory($id_user)
+	{
+		$this->db->select('booking.*, movie.title as movie_title, calendar.day, calendar.time, calendar.gia_ve');
+		$this->db->from('booking');
+		$this->db->join('calendar', 'booking.id_calendar = calendar.id_calendar');
+		$this->db->join('movie', 'calendar.id_movie = movie.id');
+		$this->db->where('booking.id_user', $id_user);
+		$this->db->order_by('booking.id_ve', 'desc');
+		$result = $this->db->get();
+		return $result->result_array();
+	}
+
 }
 
 /* End of file showuser_model.php */
