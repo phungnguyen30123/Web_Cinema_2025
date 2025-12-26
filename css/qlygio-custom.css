@@ -1,0 +1,37 @@
+/* Custom CSS for qlygio_view */
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+}
+.hidden-xs-up {
+    display: none !important;
+}
+.text-xs-center {
+    text-align: center;
+}
+.text-xs-right {
+    text-align: right;
+}
+.thaotac {
+    margin-bottom: 15px;
+}
+.giochuaedit {
+    font-size: 18px;
+    font-weight: 500;
+    color: #212529;
+    padding: 8px 0;
+}
+.form-control.gioedit {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+}
+.btn i {
+    margin-right: 5px;
+}
+pre {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+}
+

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css
 ">
     <link href="<?php echo base_url(); ?>css/sidebar.css" rel="stylesheet" />
+    <link href="<?php echo base_url(); ?>css/admin-style.css" rel="stylesheet" />
     <link rel="stylesheet" href="<?php echo base_url(); ?>https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link rel="stylesheet" href="<?php echo base_url(); ?>https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -143,8 +144,7 @@
         
 
 
-
-
+  <script src="<?php echo base_url(); ?>js/admin-sidebar.js"></script>
 </body>
 </html>
 

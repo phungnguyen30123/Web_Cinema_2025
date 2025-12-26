@@ -1,0 +1,23 @@
+/* Custom CSS for qlylich_view */
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+}
+.hidden-xs-up {
+    display: none !important;
+}
+.btn i {
+    display: inline-block;
+    font-size: 1em;
+    margin-right: 5px;
+}
+.daychuaedit {
+    font-size: 18px;
+    font-weight: 500;
+}
+.form-control.dayedit {
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--dark-text);
+}
+

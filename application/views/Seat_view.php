@@ -65,7 +65,7 @@
     <section class="container">
         <div class="order-container">
             <div class="order">
-                <img class="order__images" alt='' src="<?php echo base_url(); ?>images/tickets.png">
+                <!-- <img class="order__images" alt='' src="<?php echo base_url(); ?>images/tickets.png"> -->
                 <p class="order__title">ĐẶT VÉ<br><br>
                     <span class="order__descript"><strong>Phim: <?= $valuelich['title']; ?></strong><br><strong>Thời gian: <?= $daydadoi ?>, <?= $valuelich['time']; ?></strong></span>
                 </p>

@@ -421,5 +421,6 @@
 
         <!-- Custom -->
         <script src="<?php echo base_url(); ?>js/custom.js"></script>
+  <script src="<?php echo base_url(); ?>js/admin-sidebar.js"></script>
 </body>
 </html>

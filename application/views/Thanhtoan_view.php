@@ -50,7 +50,7 @@
         <section class="container">
             <div class="order-container">
                 <div class="order">
-                    <img class="order__images" alt='' src="<?php echo base_url(); ?>images/tickets.png">
+                    <!-- <img class="order__images" alt='' src="<?php echo base_url(); ?>images/tickets.png"> -->
                     <p class="order__title">Đặt vé</p>
                     <span class="order__descript"><strong>Phim: <?= $valueghe[7]; ?></strong><br><strong>Thời gian: <?= $valueghe[8]; ?>, <?= $valueghe['9']; ?></strong></span>
                     
