@@ -217,6 +217,31 @@
 
 
             <h2 class="page-heading">Bình luận</h2>
+            
+            <?php /* ===== PHÂN TÍCH CẢM XÚC BÌNH LUẬN (SENTIMENT ANALYSIS) - TẠM TẮT =====
+            <?php if (isset($sentiment_stats) && !empty($sentiment_stats) && $sentiment_stats['total'] > 0): ?>
+                <div class="sentiment-stats" style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #ffd564;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #4c4145;">Phân tích cảm xúc bình luận (AI)</h3>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <span style="color: #28a745; font-weight: 600;"><?php echo $sentiment_stats['positive']; ?></span>
+                            <span style="font-size: 13px; color: #666;">Tích cực</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <span style="color: #6c757d; font-weight: 600;"><?php echo $sentiment_stats['neutral']; ?></span>
+                            <span style="font-size: 13px; color: #666;">Trung tính</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <span style="color: #dc3545; font-weight: 600;"><?php echo $sentiment_stats['negative']; ?></span>
+                            <span style="font-size: 13px; color: #666;">Tiêu cực</span>
+                        </div>
+                        <div style="margin-left: auto; font-size: 12px; color: #999;">
+                            Tổng: <?php echo $sentiment_stats['total']; ?> bình luận
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+            ===== END SENTIMENT ANALYSIS ===== */ ?>
 
             <div class="comment-wrapper">
                 <?php 
@@ -238,6 +263,28 @@
                                         <span class="comment__author" style="text-align: left; display: block; padding-left: 0 !important; margin-left: 0 !important;">
                                             <?php echo isset($binhluan['fullname']) && !empty($binhluan['fullname']) ? htmlspecialchars($binhluan['fullname']) : 'Người dùng'; ?>
                                         </span>
+                                        <?php /* ===== PHÂN TÍCH CẢM XÚC BÌNH LUẬN (SENTIMENT ANALYSIS) - TẠM TẮT =====
+                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                            <span class="comment__author" style="text-align: left; display: block; padding-left: 0 !important; margin-left: 0 !important;">
+                                                <?php echo isset($binhluan['fullname']) && !empty($binhluan['fullname']) ? htmlspecialchars($binhluan['fullname']) : 'Người dùng'; ?>
+                                            </span>
+                                            <?php if (isset($binhluan['sentiment']) && !empty($binhluan['sentiment'])): 
+                                                $sentiment = $binhluan['sentiment'];
+                                                $sentimentType = $sentiment['sentiment'];
+                                                $sentimentLabels = [
+                                                    'positive' => ['label' => 'Tích cực', 'icon' => 'fa-smile-o', 'color' => '#28a745', 'bg' => '#d4edda'],
+                                                    'negative' => ['label' => 'Tiêu cực', 'icon' => 'fa-frown-o', 'color' => '#dc3545', 'bg' => '#f8d7da'],
+                                                    'neutral' => ['label' => 'Trung tính', 'icon' => 'fa-meh-o', 'color' => '#6c757d', 'bg' => '#e2e3e5']
+                                                ];
+                                                $label = $sentimentLabels[$sentimentType] ?? $sentimentLabels['neutral'];
+                                            ?>
+                                                <span class="sentiment-badge" style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; background: <?php echo $label['bg']; ?>; color: <?php echo $label['color']; ?>;" title="Phân tích cảm xúc: <?php echo $label['label']; ?> (Độ tin cậy: <?php echo round($sentiment['confidence'] * 100); ?>%)">
+                                                    <i class="fa <?php echo $label['icon']; ?>"></i>
+                                                    <?php echo $label['label']; ?>
+                                                </span>
+                                            <?php endif; ?>
+                                        </div>
+                                        ===== END SENTIMENT ANALYSIS ===== */ ?>
                                         <p class="comment__date" style="margin: 0;">
                                             <?php 
                                             // Hiển thị thời gian (ưu tiên updated_at nếu đã sửa)

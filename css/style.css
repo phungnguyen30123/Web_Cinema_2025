@@ -6128,6 +6128,9 @@ ul#navigation li.mega-menu__nav-item:hover:before {
 .time-select .group--first:before {
   display: none;
 }
+.time-select .group--first:after {
+  display: none;
+}
 .time-select .group--last:after {
   display: none;
 }
@@ -10534,7 +10537,7 @@ ul#navigation li.mega-menu__nav-item:hover:before {
     margin: 0;
   }
   .ls-cat {
-    margi: 0;
+    margin: 0;
   }
   .mobile-category {
     width: 100%;
@@ -10902,5 +10905,532 @@ ul#navigation li.mega-menu__nav-item:hover:before {
 @media (max-width: 319px) {
   .post--preview .post__image {
     width: 100%;
+  }
+}
+
+/* Modern Payment Page Styles */
+.payment-page-content {
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+.payment-summary-card,
+.payment-form-card {
+  background: #ffffff;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  margin-bottom: 60px;
+}
+
+.payment-form-card {
+  margin-bottom: 0;
+}
+
+.payment-summary-card .checkout-wrapper {
+  border-bottom: 1px solid #dbdee1;
+  margin-bottom: 60px;
+  padding-bottom: 50px;
+}
+
+.payment-summary-card .page-heading,
+.payment-form-card .page-heading {
+  margin-bottom: 27px;
+  padding-bottom: 0;
+  border-bottom: none;
+  color: #4c4145;
+  font-size: 20px;
+  font: 20px 'aleobold', sans-serif;
+  text-transform: uppercase;
+  padding-left: 30px;
+  background-image: url(../images/components/scarf.png);
+  background-size: 21px 6px;
+  background-position: left center;
+  background-repeat: no-repeat;
+}
+
+.booking-summary-content {
+  margin-top: 15px;
+}
+
+.movie-poster-section {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 25px;
+  align-items: flex-start;
+}
+
+.movie-poster {
+  flex-shrink: 0;
+  width: 120px;
+}
+
+.movie-poster img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  display: block;
+}
+
+.movie-info-right {
+  flex: 1;
+}
+
+.movie-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #4c4145;
+  margin-bottom: 8px;
+  margin-top: 0;
+}
+
+.movie-format {
+  font-size: 14px;
+  color: #969b9f;
+  display: inline-block;
+  padding: 4px 8px;
+  background: #f8f9fa;
+  border-radius: 3px;
+}
+
+.cinema-showtime-section {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px dashed #dbdee1;
+}
+
+.cinema-info {
+  font-size: 15px;
+  color: #4c4145;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.showtime-info {
+  font-size: 14px;
+  color: #4c4145;
+}
+
+.seat-items-section {
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+
+.seat-item {
+  margin-bottom: 12px;
+}
+
+.seat-item-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #4c4145;
+}
+
+.seat-item-quantity {
+  font-weight: bold;
+}
+
+.seat-item-name {
+  flex: 1;
+}
+
+.seat-item-price {
+  font-weight: bold;
+}
+
+.seat-numbers {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #4c4145;
+  line-height: 1.6;
+}
+
+.seat-numbers strong {
+  color: #4c4145;
+  font-weight: bold;
+}
+
+.total-cost-simple {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px dashed #dbdee1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  color: #4c4145;
+}
+
+.total-cost-simple .total-label {
+  font-weight: bold;
+}
+
+.total-cost-simple .total-amount {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff6b35;
+}
+
+.total-cost-decoration {
+  display: none;
+}
+
+.payment-methods {
+  margin-bottom: 25px;
+}
+
+.payment-method-item {
+  margin-bottom: 12px;
+}
+
+.payment-method-item input[type="radio"] {
+  display: none;
+}
+
+.payment-method-label {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #dbdee1;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #ffffff;
+  position: relative;
+}
+
+.payment-method-label:hover {
+  border-color: #ffd564;
+  background: #fffef8;
+}
+
+.payment-method-item input[type="radio"]:checked + .payment-method-label {
+  border-color: #ffd564;
+  background: #fffef8;
+}
+
+.payment-method-item input[type="radio"]:checked + .payment-method-label .payment-method-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.payment-method-item.active .payment-method-label {
+  border-color: #ffd564;
+  background: linear-gradient(135deg, #fffef8 0%, #ffffff 100%);
+  box-shadow: 0 8px 32px rgba(255, 213, 100, 0.4), inset 0 0 0 2px rgba(255, 213, 100, 0.2);
+  transform: scale(1.02);
+}
+
+.payment-method-item.active .payment-method-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.payment-method-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #fe505a;
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.payment-method-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  border-radius: 3px;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.payment-method-icon i {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.momo-icon i {
+  color: #AF287F;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.vnpay-icon i {
+  color: #0052A5;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.payment-method-info {
+  flex: 1;
+}
+
+.payment-method-name {
+  font-size: 15px;
+  font-weight: bold;
+  color: #4c4145;
+  margin-bottom: 4px;
+}
+
+.payment-method-desc {
+  font-size: 13px;
+  color: #969b9f;
+  margin-bottom: 6px;
+}
+
+.payment-method-features {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.feature-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(255, 213, 100, 0.2);
+  color: #4c4145;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+}
+
+.feature-tag i {
+  font-size: 10px;
+  color: #ffd564;
+}
+
+.payment-method-check {
+  font-size: 18px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: #ffd564;
+}
+
+.payment-method-item input[type="radio"]:checked + .payment-method-label .payment-method-check {
+  opacity: 1;
+}
+
+.btn-payment-submit {
+  width: 100%;
+  padding: 11px 17px;
+  background: #ffd564;
+  border: solid 1px #ffc936;
+  border-radius: 3px;
+  color: #4c4145;
+  font-size: 12px;
+  font-weight: bold;
+  font-family: 'aleobold', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.16), inset 0 2px rgba(255, 255, 255, 0.2);
+  margin-bottom: 20px;
+}
+
+.btn-payment-submit .btn-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-payment-submit .btn-shine {
+  display: none;
+}
+
+.btn-payment-submit:hover {
+  background: #ffe08d;
+  border-color: transparent;
+}
+
+.btn-payment-submit:active {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.16), inset 0 2px rgba(255, 255, 255, 0.2);
+}
+
+.payment-security-note {
+  text-align: center;
+  color: #969b9f;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.security-icons {
+  display: flex;
+  gap: 8px;
+}
+
+.security-icons i {
+  color: #4caf50;
+  font-size: 14px;
+}
+
+.payment-security-note span {
+  font-weight: normal;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .payment-method-label {
+    padding: 12px;
+  }
+
+  .payment-method-icon {
+    width: 35px;
+    height: 35px;
+    margin-right: 12px;
+  }
+
+  .payment-method-icon i {
+    font-size: 18px;
+  }
+
+  .payment-method-name {
+    font-size: 14px;
+  }
+
+  .payment-method-desc {
+    font-size: 12px;
+  }
+
+  .movie-poster-section {
+    gap: 15px;
+  }
+
+  .movie-poster {
+    width: 100px;
+  }
+
+  .movie-title {
+    font-size: 18px;
+  }
+
+  .cinema-info {
+    font-size: 14px;
+  }
+
+  .showtime-info {
+    font-size: 13px;
+  }
+
+  .seat-item-header {
+    font-size: 13px;
+  }
+
+  .seat-numbers {
+    font-size: 13px;
+  }
+
+  .total-cost-simple {
+    font-size: 14px;
+  }
+
+  .total-cost-simple .total-amount {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .payment-page-content {
+    margin-top: 15px;
+  }
+
+  .movie-poster-section {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .movie-poster {
+    width: 80px;
+    margin: 0 auto;
+  }
+
+  .movie-title {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .movie-format {
+    display: block;
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  .cinema-info {
+    font-size: 13px;
+    text-align: center;
+  }
+
+  .showtime-info {
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .seat-item-header {
+    font-size: 12px;
+    flex-wrap: wrap;
+  }
+
+  .seat-numbers {
+    font-size: 12px;
+  }
+
+  .total-cost-simple {
+    font-size: 13px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .total-cost-simple .total-amount {
+    font-size: 15px;
+  }
+}
+
+  .payment-method-label {
+    padding: 10px;
+    flex-wrap: wrap;
+  }
+
+  .payment-method-icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+  }
+
+  .payment-method-icon i {
+    font-size: 16px;
+  }
+
+  .payment-method-name {
+    font-size: 13px;
+  }
+
+  .payment-method-desc {
+    font-size: 11px;
+  }
+
+  .payment-method-badge {
+    top: 6px;
+    right: 6px;
+    padding: 2px 6px;
+    font-size: 9px;
+  }
+
+  .payment-security-note {
+    font-size: 12px;
+    flex-wrap: wrap;
   }
 }

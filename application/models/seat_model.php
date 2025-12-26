@@ -11,9 +11,10 @@ class seat_model extends CI_Model {
 	}
 	public function getDatabaseLich($idc)
 	{
-		$this->db->select('*');
+		$this->db->select('calendar.*, movie.*, room.ten_phong');
 		$this->db->from('calendar');
 		$this->db->join('movie', 'calendar.id_movie = movie.id');
+		$this->db->join('room', 'calendar.id_phong = room.id_room', 'left');
 		$this->db->where('id_calendar', $idc);
 		$dulieuLich = $this->db->get();
 		return $dulieuLich=$dulieuLich->result_array();

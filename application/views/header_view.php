@@ -1083,3 +1083,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+<!-- AI Chatbot Widget - Hiển thị trên mọi trang -->
+<?php $this->load->view('chatbot_view'); ?>

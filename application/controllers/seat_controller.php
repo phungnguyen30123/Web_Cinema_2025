@@ -93,6 +93,12 @@ class seat_controller extends MY_Controller {
 			return;
 		}
 		
+		// Lấy thông tin phim và rạp từ id_calendar
+		$this->load->model('seat_model');
+		$thongtinlich = $this->seat_model->getDatabaseLich($id_calendar);
+		$poster = !empty($thongtinlich[0]['poster']) ? $thongtinlich[0]['poster'] : '';
+		$ten_phong = !empty($thongtinlich[0]['ten_phong']) ? $thongtinlich[0]['ten_phong'] : '';
+		
 		$dulieutucontroller = array(array(
 			$id_calendar,
 			$choosen_number,
@@ -103,7 +109,9 @@ class seat_controller extends MY_Controller {
 			$choosen_sits,
 			$tenphim,
 			$ngay,
-			$gio
+			$gio,
+			$poster,
+			$ten_phong
 	));
 		$dulieu = array('dulieughetucontroller'=>$dulieutucontroller);
 		

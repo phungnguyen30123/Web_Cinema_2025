@@ -119,6 +119,44 @@ class Showphim_model extends CI_Model {
 		$this->db->where('id', $id);
 		return $this->db->update('movie', $anhcanup);
 	}
+
+	/**
+	 * Lấy phim theo thể loại (category)
+	 * @param string $category Tên thể loại
+	 * @param int $limit Số lượng phim tối đa
+	 * @return array
+	 */
+	public function getPhimByCategory($category, $limit = 10)
+	{
+		$this->db->select('*');
+		$this->db->like('category', $category);
+		$this->db->where('DATEDIFF(CURRENT_DATE, open_date) >0 and DATEDIFF(CURRENT_DATE, open_date) <30'); // Chỉ lấy phim đang chiếu
+		$this->db->order_by('id', 'desc');
+		$this->db->limit($limit);
+		$query = $this->db->get('movie');
+		return $query->result_array();
+	}
+
+	/**
+	 * Lấy tất cả thể loại phim có trong database
+	 * @return array
+	 */
+	public function getAllCategories()
+	{
+		$this->db->select('DISTINCT category');
+		$this->db->where('category IS NOT NULL');
+		$this->db->where('category !=', '');
+		$this->db->where('DATEDIFF(CURRENT_DATE, open_date) >0 and DATEDIFF(CURRENT_DATE, open_date) <30'); // Chỉ lấy phim đang chiếu
+		$query = $this->db->get('movie');
+		$results = $query->result_array();
+		$categories = array();
+		foreach ($results as $result) {
+			if (!empty($result['category'])) {
+				$categories[] = $result['category'];
+			}
+		}
+		return $categories;
+	}
 }
 
 /* End of file showphim_model.php */

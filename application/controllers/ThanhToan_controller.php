@@ -111,7 +111,7 @@ class ThanhToan_controller extends CI_Controller {
 	public function process()
     {
         // Kiểm tra đăng nhập
-        if (!$this->session->userdata('vipmember')) {
+        if (!$this->session->userdata('logged_in')) {
             redirect('Login_register/indexlogin','refresh');
             return;
         }

@@ -51,7 +51,7 @@
             <div class="order-container">
                 <div class="order">
                     <img class="order__images" alt='' src="<?php echo base_url(); ?>images/tickets.png">
-                    <p class="order__title">Đặt vé<br><span class="order__descript">and have fun movie time</span></p>
+                    <p class="order__title">Đặt vé</p>
                     <span class="order__descript"><strong>Phim: <?= $valueghe[7]; ?></strong><br><strong>Thời gian: <?= $valueghe[8]; ?>, <?= $valueghe['9']; ?></strong></span>
                     
                 </div>
@@ -63,79 +63,163 @@
                 </div>
 
             <div class="col-sm-12">
-                <div class="checkout-wrapper">
-                    <h2 class="page-heading">Tổng giá</h2>
-                    <ul class="book-result">
-                        <li class="book-result__item">Ghế đã chọn: <span class="book-result__count booking-ticket"><?= $valueghe[6]; ?></span></li>
-                        <br> 
-                        <br>    
-                        <li class="book-result__item">Số lượng ghế Thường: <span class="book-result__count booking-ticket"><?= $valueghe[2]; ?></span></li>
+                <div class="payment-page-content">
+                    <!-- Booking Summary -->
+                    <div class="checkout-wrapper payment-summary-card">
+                        <h2 class="page-heading">Tóm tắt đặt vé</h2>
                         
-                        <li class="book-result__item">Số lượng ghế Vip: <span class="book-result__count booking-ticket"><?= $valueghe[3]; ?></span></li>
-                        <li class="book-result__item">Số lượng ghế Đôi: <span class="book-result__count booking-ticket"><?= $valueghe[4]; ?></span></li>
-                        <br>
-                        <li class="book-result__item">Tổng số lượng vé: <span class="book-result__count booking-ticket"><?= $valueghe[1]; ?></span></li>
-                        <br>
-                        <br>    
-
-                        
-                        <li class="book-result__item">Tổng tiền: <span class="book-result__count booking-cost"><?= $valueghe[5]; ?> 000 đ</span></li>
-                    </ul>
-
-                    <!-- <h2 class="page-heading">Chọn phương thức thanh toán</h2>
-                    <div class="payment">
-                        <a href="#" class="payment__item">
-                            <img alt='' src="<?php echo base_url(); ?>images/payment/pay1.png">
-                        </a>
-                        <a href="#" class="payment__item">
-                             <img alt='' src="images/payment/pay2.png"> 
-                        </a>
-                        <a href="#" class="payment__item">
-                            <img alt='' src="<?php echo base_url(); ?>images/payment/pay3.png">
-                        </a>
-                        <a href="#" class="payment__item">
-                            <img alt='' src="<?php echo base_url(); ?>images/payment/pay4.png">
-                        </a>
-                        <a href="#" class="payment__item">
-                            <img alt='' src="<?php echo base_url(); ?>images/payment/pay5.png">
-                        </a>
-                        <a href="#" class="payment__item">
-                            <img alt='' src="<?php echo base_url(); ?>images/payment/pay6.png">
-                        </a>
-                        <a href="#" class="payment__item">
-                            <img alt='' src="<?php echo base_url(); ?>images/payment/pay7.png">
-                        </a> 
-                    </div>-->
-
-                </div>
-                
-                <div class="order">                    
-                    <form class="booking-pagination booking-pagination--margin" id='payment-form' action="<?php echo base_url(); ?>index.php/ThanhToan_controller/process" method='post' enctype="multidata/form-data">
-                        <!-- Tất cả hidden inputs chung -->
-                        <input type="hidden" name="id_user" value="<?= $_SESSION['id_user'] ?>">
-                        <input type="hidden" name='choosen-cost' value="<?= $valueghe[5]; ?> 000 đ">
-                        <input type="hidden" name='choosen-sits' value="<?= $valueghe[6]; ?>">
-                        <input type="hidden" name="id_calendar" value="<?= $valueghe[0]; ?>">
-                        <input type="hidden" name="tenphim" value="<?= $valueghe[7]; ?>">
-                        <input type="hidden" name="ngay" value="<?= $valueghe[8]; ?>">
-                        <input type="hidden" name="gio" value="<?= $valueghe[9]; ?>">
-                        
-                        <div class="payment" style="margin-bottom: 20px;">
-                            <h3 for="payment-method" style="display: block; margin-bottom: 10px; font-weight: bold;">
-                                Phương thức thanh toán:
-                            </h3>
-                            <select id="payment-method" name="payment_method" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 15px;">
-                                <option selected value="payUrl">Thanh toán qua MoMo</option>
-                                <option value="redirect">Thanh toán qua VNPay</option>
-                            </select>
+                        <div class="booking-summary-content">
+                            <!-- Movie Info with Poster -->
+                            <div class="movie-poster-section">
+                                <?php if (!empty($valueghe[10])): ?>
+                                <div class="movie-poster">
+                                    <img src="<?= $valueghe[10]; ?>" alt="<?= $valueghe[7]; ?>">
+                                </div>
+                                <?php endif; ?>
+                                <div class="movie-info-right">
+                                    <h3 class="movie-title"><?= $valueghe[7]; ?></h3>
+                                    <div class="movie-format">2D Phụ Đề</div>
+                                </div>
+                            </div>
                             
-                            <button type="submit" style="width: 100%; padding: 12px; border: gray solid 1px; border-radius: 5px; background-color: #ffd564; cursor: pointer; font-weight: bold;">
-                                Thanh toán
-                            </button>
+                            <!-- Cinema and Showtime -->
+                            <div class="cinema-showtime-section">
+                                <div class="cinema-info">
+                                    <?php if (!empty($valueghe[11])): ?>
+                                        V-STAR Đà Nẵng - <?= $valueghe[11]; ?>
+                                    <?php else: ?>
+                                        V-STAR Đà Nẵng
+                                    <?php endif; ?>
+                                </div>
+                                <div class="showtime-info">
+                                    Suất: <?= $valueghe['9']; ?> - <?= $valueghe[8]; ?>
+                                </div>
+                            </div>
+                            
+                            <!-- Ticket Details -->
+                            <div class="seat-items-section">
+                                <?php 
+                                // Hiển thị từng loại ghế đã mua
+                                if ($valueghe[2] > 0) { // Ghế thường
+                                    $price_cheap = 55000;
+                                ?>
+                                <div class="seat-item">
+                                    <div class="seat-item-header">
+                                        <span class="seat-item-quantity"><?= $valueghe[2]; ?>x</span>
+                                        <span class="seat-item-name">Ghế đơn</span>
+                                        <span class="seat-item-price"><?= number_format($price_cheap, 0, ',', '.'); ?> ₫</span>
+                                    </div>
+                                </div>
+                                <?php } ?>
+                                
+                                <?php if ($valueghe[3] > 0) { // Ghế VIP
+                                    $price_middle = 70000;
+                                ?>
+                                <div class="seat-item">
+                                    <div class="seat-item-header">
+                                        <span class="seat-item-quantity"><?= $valueghe[3]; ?>x</span>
+                                        <span class="seat-item-name">Ghế VIP</span>
+                                        <span class="seat-item-price"><?= number_format($price_middle, 0, ',', '.'); ?> ₫</span>
+                                    </div>
+                                </div>
+                                <?php } ?>
+                                
+                                <?php if ($valueghe[4] > 0) { // Ghế đôi
+                                    $price_expansive = 120000;
+                                ?>
+                                <div class="seat-item">
+                                    <div class="seat-item-header">
+                                        <span class="seat-item-quantity"><?= $valueghe[4]; ?>x</span>
+                                        <span class="seat-item-name">Ghế đôi</span>
+                                        <span class="seat-item-price"><?= number_format($price_expansive, 0, ',', '.'); ?> ₫</span>
+                                    </div>
+                                </div>
+                                <?php } ?>
+                                
+                                <div class="seat-numbers">
+                                    <strong>Ghế:</strong> <?= $valueghe[6]; ?>
+                                </div>
+                            </div>
+                            
+                            <!-- Total Cost -->
+                            <div class="total-cost-simple">
+                                <span class="total-label">Tổng cộng</span>
+                                <span class="total-amount"><?= number_format($valueghe[5] * 1000, 0, ',', '.'); ?> ₫</span>
+                            </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
 
+                    <!-- Payment Form -->
+                    <div class="payment-form-card">
+                        <h2 class="page-heading">Phương thức thanh toán</h2>
+                            
+                            <form id='payment-form' action="<?php echo base_url(); ?>index.php/ThanhToan_controller/process" method='post' enctype="multidata/form-data">
+                                <!-- Tất cả hidden inputs chung -->
+                                <input type="hidden" name="id_user" value="<?= $this->session->userdata('id_user') ?>">
+                                <input type="hidden" name='choosen-cost' value="<?= $valueghe[5]; ?> 000 đ">
+                                <input type="hidden" name='choosen-sits' value="<?= $valueghe[6]; ?>">
+                                <input type="hidden" name="id_calendar" value="<?= $valueghe[0]; ?>">
+                                <input type="hidden" name="tenphim" value="<?= $valueghe[7]; ?>">
+                                <input type="hidden" name="ngay" value="<?= $valueghe[8]; ?>">
+                                <input type="hidden" name="gio" value="<?= $valueghe[9]; ?>">
+                                
+                                <div class="payment-methods">
+                                    <div class="payment-method-item" data-method="redirect">
+                                        <input type="radio" id="payment-vnpay" name="payment_method" value="redirect" checked required>
+                                        <label for="payment-vnpay" class="payment-method-label payment-vnpay">
+                                            <div class="payment-method-badge">Phổ biến</div>
+                                            <div class="payment-method-icon vnpay-icon">
+                                                <i class="fa fa-credit-card"></i>
+                                            </div>
+                                            <div class="payment-method-info">
+                                                <div class="payment-method-name">VNPay</div>
+                                                <div class="payment-method-desc">Hỗ trợ nhiều ngân hàng</div>
+                                                <div class="payment-method-features">
+                                                    <span class="feature-tag"><i class="fa fa-bank"></i> Ngân hàng</span>
+                                                    <span class="feature-tag"><i class="fa fa-shield"></i> Bảo mật</span>
+                                                </div>
+                                            </div>
+                                            <div class="payment-method-check">
+                                                <i class="fa fa-check-circle"></i>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="payment-method-item" data-method="payUrl">
+                                        <input type="radio" id="payment-momo" name="payment_method" value="payUrl" required>
+                                        <label for="payment-momo" class="payment-method-label payment-momo">
+                                            <div class="payment-method-icon momo-icon">
+                                                <i class="fa fa-mobile"></i>
+                                            </div>
+                                            <div class="payment-method-info">
+                                                <div class="payment-method-name">MoMo Wallet</div>
+                                                <div class="payment-method-desc">Thanh toán nhanh qua ví điện tử</div>
+                                                <div class="payment-method-features">
+                                                    <span class="feature-tag"><i class="fa fa-bolt"></i> Nhanh</span>
+                                                    <span class="feature-tag"><i class="fa fa-shield"></i> An toàn</span>
+                                                </div>
+                                            </div>
+                                            <div class="payment-method-check">
+                                                <i class="fa fa-check-circle"></i>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="btn-payment-submit">
+                                    <span class="btn-text">
+                                        <i class="fa fa-lock"></i>
+                                        Thanh toán ngay
+                                    </span>
+                                </button>
+                                
+                                <div class="payment-security-note">
+                                    <i class="fa fa-shield"></i>
+                                    <span>Thông tin thanh toán được mã hóa và bảo mật</span>
+                                </div>
+                            </form>
+                    </div>
+                </div>
             </div>
 
         </section>
@@ -261,6 +345,32 @@
 
         <!-- Custom -->
         <script src="<?php echo base_url(); ?>js/custom.js"></script>
+
+        <!-- Payment Page Script -->
+        <script>
+            $(document).ready(function() {
+                // Enhanced payment method selection
+                $('.payment-method-label').on('click', function() {
+                    // Remove active state from all items
+                    $('.payment-method-item').removeClass('active');
+                    // Add active state to clicked item
+                    $(this).closest('.payment-method-item').addClass('active');
+                });
+
+                // Form validation before submit
+                $('#payment-form').on('submit', function(e) {
+                    var paymentMethod = $('input[name="payment_method"]:checked').val();
+                    if (!paymentMethod) {
+                        e.preventDefault();
+                        alert('Vui lòng chọn phương thức thanh toán');
+                        return false;
+                    }
+                });
+
+                // Initialize - set active state for checked payment method
+                $('input[name="payment_method"]:checked').closest('.payment-method-item').addClass('active');
+            });
+        </script>
 
 </body>
 </html>

@@ -56,6 +56,24 @@ class Movie_page_controller extends CI_Controller {
 		// Lấy bình luận chưa được xử lý
 		$this->load->model('comment_model');
 		$binhluan_chuaxuly = $this->comment_model->getCommentsChuaXuLy($idlaytuview);
+		
+		// ===== PHÂN TÍCH CẢM XÚC BÌNH LUẬN (SENTIMENT ANALYSIS) - TẠM TẮT =====
+		// Lấy thông tin sentiment cho mỗi bình luận
+		// $this->load->model('sentiment_model');
+		// foreach ($binhluan_chuaxuly as &$binhluan) {
+		// 	$sentiment = $this->sentiment_model->getSentiment($binhluan['id_comment']);
+		// 	$binhluan['sentiment'] = $sentiment;
+		// }
+		// 
+		// // Lấy thống kê sentiment của phim
+		// $sentimentStats = $this->sentiment_model->getMovieSentimentStats($idlaytuview);
+		// 
+		// $dulieubinhluan = array(
+		// 	'binhluan_chuaxuly' => $binhluan_chuaxuly,
+		// 	'sentiment_stats' => $sentimentStats
+		// );
+		// ===== END SENTIMENT ANALYSIS =====
+		
 		$dulieubinhluan = array('binhluan_chuaxuly' => $binhluan_chuaxuly);
 
 		$this->load->view('movie_page_view', $ketqua + $dulieungay + $dulieugio + $dulieubinhluan);
@@ -108,6 +126,18 @@ class Movie_page_controller extends CI_Controller {
 		);
 
 		if ($this->comment_model->insertComment($data)) {
+			// ===== PHÂN TÍCH CẢM XÚC BÌNH LUẬN (SENTIMENT ANALYSIS) - TẠM TẮT =====
+			// Lấy ID bình luận vừa tạo
+			// $id_comment = $this->db->insert_id();
+			// 
+			// // Phân tích cảm xúc bình luận bằng AI
+			// $this->load->model('sentiment_model');
+			// $sentimentData = $this->sentiment_model->analyzeSentiment($content);
+			// 
+			// // Lưu kết quả phân tích
+			// $this->sentiment_model->saveSentiment($id_comment, $sentimentData);
+			// ===== END SENTIMENT ANALYSIS =====
+			
 			$this->session->set_flashdata('success_msg', 'Bình luận của bạn đã được gửi thành công!');
 		} else {
 			$this->session->set_flashdata('error_msg', 'Có lỗi xảy ra khi gửi bình luận. Vui lòng thử lại.');
