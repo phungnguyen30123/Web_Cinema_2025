@@ -1,0 +1,127 @@
+@startuml Web_Cinema_Use_Case_Diagram
+!theme plain
+title Web Cinema - Use Case Diagram
+
+left to right direction
+
+' Actors
+actor "Khách Hàng" as Customer
+actor "Nhân Viên" as Staff
+actor "Quản Lý" as Admin
+actor "Hệ Thống AI" as AI_System
+
+' Packages for organization
+package "Quản Lý Phim" {
+    usecase "Xem Danh Sách Phim" as UC_ViewMovies
+    usecase "Xem Chi Tiết Phim" as UC_ViewMovieDetail
+    usecase "Thêm Phim Mới" as UC_AddMovie
+    usecase "Chỉnh Sửa Phim" as UC_EditMovie
+    usecase "Xóa Phim" as UC_DeleteMovie
+    usecase "Tìm Kiếm Phim" as UC_SearchMovie
+}
+
+package "Quản Lý Vé & Ghế" {
+    usecase "Chọn Suất Chiếu" as UC_SelectShowtime
+    usecase "Chọn Ghế" as UC_SelectSeat
+    usecase "Xem Sơ Đồ Ghế" as UC_ViewSeatMap
+    usecase "Quản Lý Suất Chiếu" as UC_ManageShowtime
+    usecase "Quản Lý Ghế" as UC_ManageSeat
+}
+
+package "Thanh Toán & Đơn Hàng" {
+    usecase "Đặt Vé" as UC_BookTicket
+    usecase "Thanh Toán" as UC_Payment
+    usecase "Xem Lịch Sử Đơn Hàng" as UC_ViewHistory
+    usecase "Quản Lý Đơn Hàng" as UC_ManageOrder
+}
+
+package "Tài Khoản & Xác Thực" {
+    usecase "Đăng Ký" as UC_Register
+    usecase "Đăng Nhập" as UC_Login
+    usecase "Đăng Xuất" as UC_Logout
+    usecase "Quản Lý Tài Khoản" as UC_ManageAccount
+    usecase "Xem Hồ Sơ" as UC_ViewProfile
+}
+
+package "Đánh Giá & Bình Luận" {
+    usecase "Bình Luận Phim" as UC_CommentMovie
+    usecase "Đánh Giá Phim" as UC_RateMovie
+    usecase "Xem Bình Luận" as UC_ViewComment
+    usecase "Quản Lý Bình Luận" as UC_ManageComment
+}
+
+package "AI Chatbot" {
+    usecase "Trò Chuyện với Chatbot" as UC_ChatAI
+    usecase "Nhận Gợi Ý Phim" as UC_GetRecommendation
+    usecase "Hỗ Trợ Khách Hàng" as UC_AISupport
+    usecase "Phân Tích Cảm Xúc" as UC_SentimentAnalysis
+}
+
+package "Quản Lý Nhân Viên" {
+    usecase "Quản Lý Nhân Viên" as UC_ManageStaff
+    usecase "Xem Lịch Làm Việc" as UC_ViewSchedule
+}
+
+package "Chương Trình Khuyến Mãi" {
+    usecase "Xem Ưu Đãi" as UC_ViewOffers
+    usecase "Quản Lý Ưu Đãi" as UC_ManageOffers
+    usecase "Áp Dụng Khuyến Mãi" as UC_ApplyPromo
+}
+
+' Customer interactions
+Customer --> UC_ViewMovies
+Customer --> UC_ViewMovieDetail
+Customer --> UC_SearchMovie
+Customer --> UC_SelectShowtime
+Customer --> UC_SelectSeat
+Customer --> UC_ViewSeatMap
+Customer --> UC_BookTicket
+Customer --> UC_Payment
+Customer --> UC_ViewHistory
+Customer --> UC_Register
+Customer --> UC_Login
+Customer --> UC_Logout
+Customer --> UC_ViewProfile
+Customer --> UC_CommentMovie
+Customer --> UC_RateMovie
+Customer --> UC_ViewComment
+Customer --> UC_ViewOffers
+Customer --> UC_ApplyPromo
+Customer --> UC_ChatAI
+
+' AI System interactions
+AI_System --> UC_ChatAI
+AI_System --> UC_GetRecommendation
+AI_System --> UC_AISupport
+AI_System --> UC_SentimentAnalysis
+
+' Staff interactions
+Staff --> UC_ManageOrder
+Staff --> UC_ViewSchedule
+Staff --> UC_CommentMovie
+Staff --> UC_ViewComment
+
+' Admin interactions
+Admin --> UC_AddMovie
+Admin --> UC_EditMovie
+Admin --> UC_DeleteMovie
+Admin --> UC_ManageShowtime
+Admin --> UC_ManageSeat
+Admin --> UC_ManageOrder
+Admin --> UC_ManageAccount
+Admin --> UC_ManageComment
+Admin --> UC_ManageOffers
+Admin --> UC_ManageStaff
+Admin --> UC_ViewMovies
+Admin --> UC_ViewMovieDetail
+
+' Include relationships
+UC_BookTicket ..> UC_SelectShowtime : include
+UC_BookTicket ..> UC_SelectSeat : include
+UC_SelectSeat ..> UC_ViewSeatMap : include
+UC_Payment ..> UC_ApplyPromo : include
+UC_ChatAI ..> UC_GetRecommendation : include
+UC_ChatAI ..> UC_SentimentAnalysis : include
+UC_ManageOrder ..> UC_ViewHistory : include
+
+@enduml
