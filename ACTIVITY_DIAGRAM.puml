@@ -1,0 +1,158 @@
+' Web Cinema - Activity Diagrams (multiple flows in one file)
+@startuml
+|User|
+start
+:Open Home Page;
+if (Select movie?) then (yes)
+  :View Movie Details;
+  if (Choose showtime?) then (yes)
+    :Open Seat Map;
+    if (Select seats?) then (yes)
+      :Proceed to Checkout;
+      stop
+    else (no)
+      :Return to Movie List;
+      stop
+    endif
+  else (no)
+    :Browse Movies;
+    stop
+  endif
+else (no)
+  stop
+endif
+@enduml
+
+' ----- Booking & Payment Activity -----
+@startuml
+start
+:Select showtime;
+:Select seats;
+:Create provisional booking (status=UNPAID);
+partition Payment {
+  :Choose payment method (Momo/Vnpay);
+  if (Momo) then (yes)
+    :Redirect to Momo gateway;
+  else (Vnpay)
+    :Redirect to Vnpay gateway;
+  endif
+  :Receive payment callback;
+}
+if (Payment successful?) then (yes)
+  :Mark booking as PAID;
+  :Generate ticket / confirmation;
+  stop
+else (no)
+  :Mark booking as FAILED or UNPAID;
+  :Show payment error;
+  stop
+endif
+@enduml
+
+' ----- Comment & Rating Activity -----
+@startuml
+start
+:Open movie detail;
+if (User logged in?) then (yes)
+  if (Has PAID booking for movie?) then (yes)
+    :Write comment & rating;
+    :Save comment (status=pending or approved);
+    if (Admin moderation required?) then (yes)
+      :Admin reviews comment;
+      if (Approve) then (yes)
+        :Publish comment;
+      else (no)
+        :Hide / delete comment;
+      endif
+    endif
+    stop
+  else (no)
+    :Show message "Ticket required to comment";
+    stop
+  endif
+else (no)
+  :Prompt login / register;
+  stop
+endif
+@enduml
+
+' ----- AI Chatbot Activity -----
+@startuml
+start
+:User sends message to chatbot;
+:Detect message category (booking, movie_info, general);
+if (Category = booking/movie_info) then (yes)
+  :Use rule-based responses and suggestions;
+  :Return suggestion or quick answer;
+  stop
+else (general/complex)
+  :Forward to AI engine (OpenAI/Gemini/HF);
+  :Receive AI response;
+  :Return response to user;
+  stop
+endif
+@enduml
+
+' ----- Admin Movie Management Activity -----
+@startuml
+start
+partition Admin {
+  :Open admin movie list;
+  if (Add new movie?) then (yes)
+    :Fill form & upload assets;
+    :Insert movie record;
+    :Redirect to movie list;
+    stop
+  endif
+  if (Edit movie?) then (yes)
+    :Open edit form;
+    :Submit updates;
+    :Update movie record;
+    stop
+  endif
+  if (Delete movie?) then (yes)
+    :Confirm delete;
+    :Remove movie record;
+    stop
+  endif
+}
+stop
+@enduml
+
+' ----- Schedule Management Activity -----
+@startuml
+start
+partition Admin {
+  :Open schedule management for movie;
+  :View days and time slots;
+  if (Add day?) then (yes)
+    :Insert new day (calendar record);
+  endif
+  if (Add time slot?) then (yes)
+    :Insert time slot with room and price;
+  endif
+  if (Edit / Delete slot?) then (yes)
+    :Update or remove calendar record;
+  endif
+  stop
+}
+@enduml
+
+' ----- Staff Ticket Verification Activity -----
+@startuml
+start
+partition Staff {
+  :Open verification page;
+  :List recent bookings;
+  :Scan QR or input booking ID;
+  :Lookup booking details;
+  if (Valid and unused?) then (yes)
+    :Mark booking as USED;
+    :Allow entry;
+    stop
+  else (no)
+    :Show error (invalid/used);
+    stop
+  endif
+}
+@enduml

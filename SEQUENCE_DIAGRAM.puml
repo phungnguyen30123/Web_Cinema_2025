@@ -1,0 +1,320 @@
+' ============================================================================
+' WEB CINEMA - ALL SEQUENCE DIAGRAMS
+' ============================================================================
+' This file contains 8 sequence diagrams covering all major flows
+' Each diagram is separated by a @startuml / @enduml block
+
+' ============================================================================
+' 1. USER REGISTRATION & LOGIN FLOW
+' ============================================================================
+@startuml User_Registration_Sequence
+title 1. User Registration & Login Flow
+actor User
+participant Browser
+participant "LoginRegisterController" as AuthCtrl
+participant "RegisterModel" as RegModel
+participant "LoginModel" as LoginModel
+database "User (DB)" as UserDB
+
+User -> Browser: Enter email, password, full name
+Browser -> AuthCtrl: POST /register (email, password, fullName)
+AuthCtrl -> RegModel: register(email, password, fullName, birthday, phone, address)
+RegModel -> UserDB: INSERT user (is_admin = 0)
+UserDB --> RegModel: user_id
+RegModel --> AuthCtrl: registration success
+AuthCtrl --> Browser: redirect to login page
+
+User -> Browser: Enter login credentials
+Browser -> AuthCtrl: POST /login (email, password)
+AuthCtrl -> LoginModel: validateLogin(email, password)
+LoginModel -> UserDB: SELECT user WHERE email = ?
+UserDB --> LoginModel: user record
+LoginModel --> AuthCtrl: login success / failure
+AuthCtrl --> Browser: create session (user_id, role)
+Browser --> User: redirect to home page
+@enduml
+
+' ============================================================================
+' 2. VIEW MOVIES FLOW
+' ============================================================================
+@startuml View_Movies_Sequence
+title 2. View Movie List & Movie Details
+actor User
+participant Browser
+participant "HomeController" as IndexCtrl
+participant "MoviePageController" as MovieCtrl
+participant "MovieModel" as MovieModel
+database "Movie (DB)" as MovieDB
+
+User -> Browser: Open home page
+Browser -> IndexCtrl: GET /
+IndexCtrl -> MovieModel: getLatestMovies()
+MovieModel -> MovieDB: SELECT * FROM movie ORDER BY id DESC
+MovieDB --> MovieModel: movie list
+MovieModel --> IndexCtrl: movieList
+
+IndexCtrl -> MovieModel: getNowShowingMovies()
+MovieModel -> MovieDB: SELECT * FROM movie WHERE status = 'NOW_SHOWING'
+MovieDB --> MovieModel: now showing movies
+
+IndexCtrl -> MovieModel: getComingSoonMovies()
+MovieModel -> MovieDB: SELECT * FROM movie WHERE status = 'COMING_SOON'
+MovieDB --> MovieModel: coming soon movies
+MovieModel --> IndexCtrl: movie groups
+
+IndexCtrl --> Browser: render home page with movie lists
+
+User -> Browser: Click movie title
+Browser -> MovieCtrl: GET /movie/{id}
+MovieCtrl -> MovieModel: getMovieById(id)
+MovieModel -> MovieDB: SELECT * FROM movie WHERE id = ?
+MovieDB --> MovieModel: movie details
+MovieModel --> MovieCtrl: movieData
+
+MovieCtrl -> MovieModel: getApprovedComments(id)
+MovieModel --> MovieCtrl: comment list
+MovieCtrl --> Browser: render movie detail page
+@enduml
+
+' ============================================================================
+' 3. BOOKING & PAYMENT FLOW
+' ============================================================================
+@startuml Booking_Payment_Sequence
+title 3. Booking & Payment Flow
+actor Customer
+participant Browser
+participant "SeatController" as SeatCtrl
+participant "SeatModel" as SeatModel
+participant "PaymentController" as PaymentCtrl
+database "Booking (DB)" as BookingDB
+database "Calendar (DB)" as CalendarDB
+participant "Momo Gateway" as Momo
+participant "Vnpay Gateway" as Vnpay
+
+Customer -> Browser: Select showtime
+Browser -> SeatCtrl: GET /seat/index/{calendarId}
+SeatCtrl -> SeatModel: getShowtime(calendarId)
+SeatModel -> CalendarDB: SELECT showtime info
+CalendarDB --> SeatModel: showtime data
+SeatModel --> SeatCtrl: showtimeData
+
+SeatCtrl -> SeatModel: getBookedSeats(calendarId)
+SeatModel -> BookingDB: SELECT seats FROM booking WHERE calendar_id = ?
+BookingDB --> SeatModel: bookedSeats
+SeatModel --> SeatCtrl: seatList
+SeatCtrl --> Browser: render seat map
+
+Customer -> Browser: Select seats and checkout
+Browser -> SeatCtrl: POST /seat/payment (userId, calendarId, seats)
+SeatCtrl -> SeatModel: createBooking(userId, calendarId, seats, amount)
+SeatModel -> BookingDB: INSERT booking (status = UNPAID)
+BookingDB --> SeatModel: bookingId
+SeatModel --> SeatCtrl: bookingId
+
+SeatCtrl -> PaymentCtrl: redirectToPayment(bookingId, amount, method)
+
+alt Payment method = Momo
+  PaymentCtrl -> Momo: process payment
+  Momo --> PaymentCtrl: payment callback (success / failure)
+  PaymentCtrl -> SeatModel: saveMomoTransaction(callbackData)
+else Payment method = Vnpay
+  PaymentCtrl -> Vnpay: process payment
+  Vnpay --> PaymentCtrl: payment callback (success / failure)
+  PaymentCtrl -> SeatModel: saveVnpayTransaction(callbackData)
+end
+
+SeatModel -> BookingDB: UPDATE booking SET status = PAID WHERE booking_id = ?
+BookingDB --> SeatModel: OK
+PaymentCtrl --> SeatCtrl: payment success
+SeatCtrl --> Browser: show booking confirmation
+Customer -> Browser: view ticket details
+@enduml
+
+' ============================================================================
+' 4. COMMENT & RATING FLOW
+' ============================================================================
+@startuml Add_Comment_Sequence
+title 4. Comment & Rating Flow
+actor Customer
+participant Browser
+participant "MoviePageController" as MovieCtrl
+participant "CommentModel" as CommentModel
+database "Comment (DB)" as CommentDB
+database "Booking (DB)" as BookingDB
+
+Customer -> Browser: Write comment
+Browser -> MovieCtrl: POST /movie/comment (userId, movieId, content, rating)
+MovieCtrl -> CommentModel: insertComment(data)
+CommentModel -> BookingDB: checkPaidBooking(userId, movieId)
+BookingDB --> CommentModel: booking status
+
+alt User has valid booking
+  CommentModel -> CommentDB: INSERT comment
+  CommentDB --> CommentModel: commentId
+  CommentModel --> MovieCtrl: success
+else No valid booking
+  CommentModel --> MovieCtrl: error (ticket required)
+end
+
+MovieCtrl --> Browser: refresh comments or show error
+
+alt Admin moderates comment
+  MovieCtrl -> CommentModel: approveComment(commentId)
+  CommentModel -> CommentDB: UPDATE comment SET status = APPROVED
+else User edits comment
+  MovieCtrl -> CommentModel: updateComment(commentId, newContent)
+  CommentModel -> CommentDB: UPDATE comment SET content = ?
+end
+@enduml
+
+' ============================================================================
+' 5. AI CHATBOT FLOW
+' ============================================================================
+@startuml AI_Chatbot_Sequence
+title 5. AI Chatbot Interaction Flow
+actor User
+participant Browser
+participant "ChatbotController" as ChatCtrl
+participant "CategoryDetector" as Detector
+participant "RuleEngine" as RuleEngine
+participant "AIEngine" as AIEngine
+participant "AI APIs (OpenAI / Gemini / HF)" as AIService
+
+User -> Browser: Send message
+Browser -> ChatCtrl: POST /chatbot (message)
+ChatCtrl -> Detector: detectCategory(message)
+Detector --> ChatCtrl: category
+
+alt Category = booking or movie
+  ChatCtrl -> RuleEngine: getRuleBasedResponse(message, category)
+  RuleEngine --> ChatCtrl: response with suggestions
+else General / AI question
+  ChatCtrl -> AIEngine: getAIResponse(message)
+  AIEngine -> AIService: request AI response
+  AIService --> AIEngine: AI reply
+  AIEngine --> ChatCtrl: AI reply
+end
+
+ChatCtrl --> Browser: display response
+User -> Browser: read response
+@enduml
+
+' ============================================================================
+' 6. ADMIN MOVIE MANAGEMENT FLOW
+' ============================================================================
+@startuml Admin_Movie_Management_Sequence
+title 6. Admin Movie Management Flow
+actor Admin
+participant Browser
+participant "AddMovieController" as AddCtrl
+participant "EditMovieController" as EditCtrl
+participant "AdminMovieController" as AdminCtrl
+participant "MovieModel" as MovieModel
+database "Movie (DB)" as MovieDB
+
+== Add Movie ==
+Admin -> Browser: Open add movie page
+Browser -> AddCtrl: GET /admin/movie/add
+AddCtrl --> Browser: show add form
+
+Admin -> Browser: Submit movie information
+Browser -> AddCtrl: POST /admin/movie/create
+AddCtrl -> MovieModel: insertMovie(data)
+MovieModel -> MovieDB: INSERT movie
+MovieDB --> MovieModel: movieId
+MovieModel --> AddCtrl: success
+AddCtrl --> Browser: redirect to movie list
+
+== Edit Movie ==
+Admin -> Browser: Open edit movie page
+Browser -> EditCtrl: GET /admin/movie/edit/{id}
+EditCtrl -> MovieModel: getMovieById(id)
+MovieModel -> MovieDB: SELECT movie
+MovieDB --> MovieModel: movieData
+MovieModel --> EditCtrl: movieData
+EditCtrl --> Browser: show edit form
+
+Admin -> Browser: Submit updates
+Browser -> EditCtrl: POST /admin/movie/update
+EditCtrl -> MovieModel: updateMovie(id, data)
+MovieModel -> MovieDB: UPDATE movie
+MovieDB --> MovieModel: OK
+MovieModel --> EditCtrl: success
+EditCtrl --> Browser: redirect
+
+== Delete Movie ==
+Admin -> Browser: Delete movie
+Browser -> AdminCtrl: POST /admin/movie/delete/{id}
+AdminCtrl -> MovieModel: deleteMovie(id)
+MovieModel -> MovieDB: DELETE movie
+MovieDB --> MovieModel: OK
+AdminCtrl --> Browser: redirect to movie list
+@enduml
+
+' ============================================================================
+' 7. SCHEDULE MANAGEMENT FLOW
+' ============================================================================
+@startuml Schedule_Management_Sequence
+title 7. Showtime Schedule Management
+actor Admin
+participant Browser
+participant "ScheduleController" as ScheduleCtrl
+participant "ScheduleModel" as ScheduleModel
+database "Calendar (DB)" as CalendarDB
+database "Room (DB)" as RoomDB
+
+Admin -> Browser: Open schedule management
+Browser -> ScheduleCtrl: GET /admin/schedule/{movieId}
+ScheduleCtrl -> ScheduleModel: getScheduleByDay(movieId)
+ScheduleModel -> CalendarDB: SELECT schedule by day
+CalendarDB --> ScheduleModel: day list
+ScheduleModel --> ScheduleCtrl: schedule data
+
+ScheduleCtrl -> RoomDB: SELECT all rooms
+RoomDB --> ScheduleCtrl: room list
+ScheduleCtrl --> Browser: show schedule page
+
+Admin -> Browser: Add showtime
+Browser -> ScheduleCtrl: AJAX add day
+ScheduleCtrl -> ScheduleModel: addDay(movieId, day)
+ScheduleModel -> CalendarDB: INSERT day
+CalendarDB --> ScheduleModel: calendarId
+
+ScheduleCtrl -> ScheduleModel: addTime(calendarId, room, time, price)
+ScheduleModel -> CalendarDB: INSERT time slot
+CalendarDB --> ScheduleModel: OK
+ScheduleCtrl --> Browser: update UI
+@enduml
+
+' ============================================================================
+' 8. STAFF TICKET VERIFICATION FLOW
+' ============================================================================
+@startuml Staff_Ticket_Verification_Sequence
+title 8. Staff Ticket Verification Flow
+actor Staff
+participant Browser
+participant "StaffController" as StaffCtrl
+participant "SeatModel" as SeatModel
+database "Booking (DB)" as BookingDB
+
+Staff -> Browser: Open ticket verification page
+Browser -> StaffCtrl: GET /staff/verify
+StaffCtrl -> SeatModel: getAllBookings()
+SeatModel -> BookingDB: SELECT bookings
+BookingDB --> SeatModel: booking list
+SeatModel --> StaffCtrl: bookings
+StaffCtrl --> Browser: display bookings
+
+Staff -> Browser: Scan QR code / enter ticket ID
+Browser -> StaffCtrl: POST /staff/verify/{bookingId}
+StaffCtrl -> SeatModel: getBookingDetails(bookingId)
+SeatModel -> BookingDB: SELECT booking details
+BookingDB --> SeatModel: ticket info
+SeatModel --> StaffCtrl: ticket information
+
+StaffCtrl -> SeatModel: verifyTicket(bookingId)
+SeatModel -> BookingDB: UPDATE booking SET status = USED
+BookingDB --> SeatModel: OK
+StaffCtrl --> Browser: show verification success
+Staff -> Browser: allow customer entry
+@enduml

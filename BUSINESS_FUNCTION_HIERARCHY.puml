@@ -1,0 +1,99 @@
+' Web Cinema - Business Function Hierarchy Diagram
+@startuml
+!define FUNCTION(name) rectangle name
+
+skinparam backgroundColor #f0f0f0
+skinparam componentStyle rectangle
+
+package "Web Cinema System" {
+  
+  package "Customer Functions" {
+    FUNCTION("Browse Movies")
+    FUNCTION("View Movie Details")
+    FUNCTION("Book Tickets")
+    FUNCTION("Select Seats")
+    FUNCTION("Make Payment")
+    FUNCTION("Generate Ticket")
+    FUNCTION("Write Comments")
+    FUNCTION("Rate Movies")
+    FUNCTION("Manage Account")
+    FUNCTION("View Booking History")
+    FUNCTION("Chat with AI")
+  }
+  
+  package "Admin Functions" {
+    package "Movie Management" {
+      FUNCTION("Add Movie")
+      FUNCTION("Edit Movie Details")
+      FUNCTION("Delete Movie")
+      FUNCTION("Upload Media")
+      FUNCTION("Manage Categories")
+    }
+    
+    package "Schedule Management" {
+      FUNCTION("Add Showtime")
+      FUNCTION("Edit Showtime")
+      FUNCTION("Delete Showtime")
+      FUNCTION("Manage Rooms")
+      FUNCTION("Set Ticket Price")
+    }
+    
+    package "User Management" {
+      FUNCTION("View Users")
+      FUNCTION("Manage User Roles")
+      FUNCTION("Deactivate Account")
+      FUNCTION("View User Activity")
+    }
+    
+    package "Comment Moderation" {
+      FUNCTION("Review Comments")
+      FUNCTION("Approve Comments")
+      FUNCTION("Delete Comments")
+      FUNCTION("Monitor Ratings")
+    }
+    
+    package "Report Management" {
+      FUNCTION("View Booking Reports")
+      FUNCTION("View Revenue Reports")
+      FUNCTION("View User Analytics")
+      FUNCTION("Export Data")
+    }
+  }
+  
+  package "Staff Functions" {
+    FUNCTION("Verify Tickets")
+    FUNCTION("View Bookings")
+    FUNCTION("Scan QR Codes")
+    FUNCTION("Check Seat Availability")
+    FUNCTION("Record Entry")
+  }
+  
+  package "Payment Processing" {
+    package "Payment Methods" {
+      FUNCTION("Momo Gateway")
+      FUNCTION("Vnpay Gateway")
+    }
+    FUNCTION("Process Payment")
+    FUNCTION("Handle Callback")
+    FUNCTION("Record Transaction")
+    FUNCTION("Generate Receipt")
+  }
+  
+  package "AI Services" {
+    FUNCTION("Detect Category")
+    FUNCTION("Rule-Based Response")
+    FUNCTION("AI-Powered Response")
+    FUNCTION("Movie Recommendation")
+    FUNCTION("Sentiment Analysis")
+  }
+  
+  package "System Management" {
+    FUNCTION("Database Management")
+    FUNCTION("User Authentication")
+    FUNCTION("Session Management")
+    FUNCTION("Logging & Monitoring")
+    FUNCTION("Backup & Recovery")
+  }
+}
+
+@enduml
