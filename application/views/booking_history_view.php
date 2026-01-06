@@ -260,23 +260,7 @@
         </div>
     </div>
     
-    <footer class="footer-wrapper">
-        <section class="container">
-            <div class="col-xs-4 col-md-2 footer-nav">
-                <ul class="nav-link">
-                    <li><a href="<?php echo base_url(); ?>index.php/Index_controller" class="nav-link__item">Phim</a></li>
-                    <li><a href="<?php echo base_url(); ?>index.php/trailer_controller" class="nav-link__item">Trailers</a></li>
-                    <li><a href="rates-left.html" class="nav-link__item">Đánh Giá</a></li>
-                </ul>
-            </div>
-            <div class="col-xs-4 col-md-2 footer-nav">
-                <ul class="nav-link">
-                    <li><a href="<?php echo base_url(); ?>index.php/ShowPhim/PhimDC" class="nav-link__item">Phim Đang Chiếu</a></li>
-                    <li><a href="<?php echo base_url(); ?>index.php/ShowPhim/PhimSC" class="nav-link__item">Phim Sắp Chiếu</a></li>
-                </ul>
-            </div>
-        </section>
-    </footer>
+    <?php require('footer_view.php'); ?>
 
     <!-- JavaScript -->
     <script src="<?php echo base_url(); ?>js/external/jquery-1.10.1.min.js"></script>

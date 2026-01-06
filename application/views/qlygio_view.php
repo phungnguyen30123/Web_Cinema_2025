@@ -33,16 +33,16 @@ ob_start();
             <fieldset class="form-group phong1">
                 <h4>Phòng 1</h4>
                 <pre></pre>
-                <input type="time" name="gio" id="gio">
-                <a data-href="1" type="button" class="btn btn-success" id="nutthemgiophong1"><i class="fa fa-plus"></i></a>
+                <input type="time" name="gio_phong1" id="gio_phong1" class="form-control">
+                <a data-href="1" type="button" class="btn btn-success" id="nutthemgiophong1"><i class="fa fa-plus"></i> Thêm giờ</a>
             </fieldset>
             <pre></pre>
 
             <fieldset class="form-group phong2">
                 <h4>Phòng 2</h4>
                 <pre></pre>
-                <input type="time" name="gio" id="gio">
-                <a data-href="2" type="button" class="btn btn-success" id="nutthemgiophong2"><i class="fa fa-plus"></i></a>
+                <input type="time" name="gio_phong2" id="gio_phong2" class="form-control">
+                <a data-href="2" type="button" class="btn btn-success" id="nutthemgiophong2"><i class="fa fa-plus"></i> Thêm giờ</a>
             </fieldset>
         </div>
         
@@ -68,8 +68,8 @@ ob_start();
                     <?php foreach ($dulieutucontroller1 as $value1): ?>
                     <li class="list-group-item">
                         <div class="thaotac text-xs-right">
-                            <a data-href="<?= $value1['id_calendar']; ?>" class="nutedit btn btn-danger"><i class="fa fa-pencil"></i></a>
-                            <a data-href="<?= $value1['id_calendar']; ?>" class="nutxoa btn btn-warning"><i class="fa fa-remove"></i></a>
+                            <a data-href="<?= $value1['id_calendar']; ?>" class="nutedit btn btn-warning btn-xs" title="Sửa"><i class="fas fa-edit"></i></a>
+                            <a data-href="<?= $value1['id_calendar']; ?>" class="nutxoa btn btn-danger btn-xs" title="Xóa"><i class="fas fa-trash"></i></a>
                         </div>
                         <div class="jquery_button text-xs-right hidden-xs-up">
                             <a data-href="<?= $value1['id_calendar']; ?>" class="nutluu btn btn-success">LƯU</a>
@@ -88,9 +88,9 @@ ob_start();
                     <h4>Phòng 2</h4>
                     <?php foreach ($dulieutucontroller2 as $value2): ?>
                     <li class="list-group-item">
-                        <div class="thaotac text-xs-right">
-                            <a data-href="<?= $value2['id_calendar']; ?>" class="nutedit btn btn-danger"><i class="fa fa-pencil"></i></a>
-                            <a data-href="<?= $value2['id_calendar']; ?>" class="nutxoa btn btn-warning"><i class="fa fa-remove"></i></a>
+                            <div class="thaotac text-xs-right">
+                            <a data-href="<?= $value2['id_calendar']; ?>" class="nutedit btn btn-warning btn-xs" title="Sửa"><i class="fas fa-edit"></i></a>
+                            <a data-href="<?= $value2['id_calendar']; ?>" class="nutxoa btn btn-danger btn-xs" title="Xóa"><i class="fas fa-trash"></i></a>
                         </div>
                         <div class="jquery_button text-xs-right hidden-xs-up">
                             <a data-href="<?= $value2['id_calendar']; ?>" class="nutluu btn btn-success">LƯU</a>
@@ -111,34 +111,50 @@ ob_start();
 </div>
 
 <script>
-$(function(){
+// Wait for jQuery to be loaded
+function initQlyGio() {
+    console.log('Initializing QlyGio...');
+
     var duongdan = '<?php echo base_url() ?>';
+
+    console.log('Base URL:', duongdan);
 
     // Sự kiện nút giờ phòng 1
     $('body').on('click', '#nutthemgiophong1', function(event) {
+        event.preventDefault();
+        console.log('Add time button for room 1 clicked');
+
         id_phong = $(this).data('href');
         id_movie = $('#id_movie').val();
         day = $('#day').val();
-        gio = $(this).parent().children('input').val();
-        
-        if (!gio) {
-            alert('Vui lòng nhập giờ chiếu!');
+        gio = $('#gio_phong1').val();
+
+        console.log('Room:', id_phong, 'Movie ID:', id_movie, 'Day:', day, 'Time:', gio);
+
+        if (!gio || gio.trim() === '') {
+            alert('Vui lòng nhập giờ chiếu cho phòng 1!');
+            $('#gio_phong1').focus();
             return;
         }
-        
+
+        console.log('Sending AJAX request for room 1 to:', duongdan+'index.php/Qlylich_controller/ajax_themgio/'+id_phong+'/'+gio);
+
         $.ajax({
             url: duongdan+'index.php/Qlylich_controller/ajax_themgio/'+id_phong+'/'+gio,
             type: 'POST',
             dataType: 'json',
-            data: {id_movie,day},
+            data: {id_movie: id_movie, day: day},
+            beforeSend: function() {
+                console.log('Sending request for room 1...');
+            }
         })
         .done(function(response) {
             if (response && response.success === true) {
                 var id_calendar = response.id_calendar;
                 noidung = '<li class="list-group-item">';
                 noidung += '<div class="thaotac text-xs-right">';
-                noidung += '<a data-href="'+id_calendar+'" class="nutedit btn btn-danger"><i class="fa fa-pencil"></i></a>';
-                noidung += ' <a data-href="'+id_calendar+'" class="nutxoa btn btn-warning"><i class="fa fa-remove"></i></a>';
+                noidung += '<a data-href="'+id_calendar+'" class="nutedit btn btn-warning btn-xs" title="Sửa"><i class="fas fa-edit"></i></a>';
+                noidung += ' <a data-href="'+id_calendar+'" class="nutxoa btn btn-danger btn-xs" title="Xóa"><i class="fas fa-trash"></i></a>';
                 noidung += '</div>';
                 noidung += '<div class="jquery_button text-xs-right hidden-xs-up">';
                 noidung += '<a data-href="'+id_calendar+'" class="nutluu btn btn-success">LƯU</a>';
@@ -153,7 +169,8 @@ $(function(){
                 noidung += '</div>';
                 noidung += '</li>';
                 $('.cacgio1').append(noidung);
-                $('#gio').val('');
+                $('#gio_phong1').val('');
+                console.log('Successfully added time slot for room 1');
             } else {
                 var errorMsg = response && response.message ? response.message : 'Có lỗi xảy ra khi thêm giờ chiếu!';
                 alert(errorMsg);
@@ -176,29 +193,40 @@ $(function(){
 
     // Sự kiện nút giờ phòng 2
     $('body').on('click', '#nutthemgiophong2', function(event) {
+        event.preventDefault();
+        console.log('Add time button for room 2 clicked');
+
         id_phong = $(this).data('href');
         id_movie = $('#id_movie').val();
         day = $('#day').val();
-        gio = $(this).parent().children('input').val();
-        
-        if (!gio) {
-            alert('Vui lòng nhập giờ chiếu!');
+        gio = $('#gio_phong2').val();
+
+        console.log('Room:', id_phong, 'Movie ID:', id_movie, 'Day:', day, 'Time:', gio);
+
+        if (!gio || gio.trim() === '') {
+            alert('Vui lòng nhập giờ chiếu cho phòng 2!');
+            $('#gio_phong2').focus();
             return;
         }
-        
+
+        console.log('Sending AJAX request for room 2 to:', duongdan+'index.php/Qlylich_controller/ajax_themgio/'+id_phong+'/'+gio);
+
         $.ajax({
             url: duongdan+'index.php/Qlylich_controller/ajax_themgio/'+id_phong+'/'+gio,
             type: 'POST',
             dataType: 'json',
-            data: {id_movie,day},
+            data: {id_movie: id_movie, day: day},
+            beforeSend: function() {
+                console.log('Sending request for room 2...');
+            }
         })
         .done(function(response) {
             if (response && response.success === true) {
                 var id_calendar = response.id_calendar;
                 noidung = '<li class="list-group-item">';
                 noidung += '<div class="thaotac text-xs-right">';
-                noidung += '<a data-href="'+id_calendar+'" class="nutedit btn btn-danger"><i class="fa fa-pencil"></i></a>';
-                noidung += ' <a data-href="'+id_calendar+'" class="nutxoa btn btn-warning"><i class="fa fa-remove"></i></a>';
+                noidung += '<a data-href="'+id_calendar+'" class="nutedit btn btn-warning btn-xs" title="Sửa"><i class="fas fa-edit"></i></a>';
+                noidung += ' <a data-href="'+id_calendar+'" class="nutxoa btn btn-danger btn-xs" title="Xóa"><i class="fas fa-trash"></i></a>';
                 noidung += '</div>';
                 noidung += '<div class="jquery_button text-xs-right hidden-xs-up">';
                 noidung += '<a data-href="'+id_calendar+'" class="nutluu btn btn-success">LƯU</a>';
@@ -213,7 +241,8 @@ $(function(){
                 noidung += '</div>';
                 noidung += '</li>';
                 $('.cacgio2').append(noidung);
-                $('#gio').val('');
+                $('#gio_phong2').val('');
+                console.log('Successfully added time slot for room 2');
             } else {
                 var errorMsg = response && response.message ? response.message : 'Có lỗi xảy ra khi thêm giờ chiếu!';
                 alert(errorMsg);
@@ -287,7 +316,25 @@ $(function(){
         });
         event.preventDefault();
     });
-})
+}
+
+// Initialize after jQuery is loaded
+if (typeof jQuery !== 'undefined') {
+    // jQuery is already loaded, initialize immediately
+    $(document).ready(function() {
+        initQlyGio();
+    });
+} else {
+    // Wait for jQuery to load
+    var checkJQuery = setInterval(function() {
+        if (typeof jQuery !== 'undefined') {
+            clearInterval(checkJQuery);
+            $(document).ready(function() {
+                initQlyGio();
+            });
+        }
+    }, 100);
+}
 </script>
 
 <?php

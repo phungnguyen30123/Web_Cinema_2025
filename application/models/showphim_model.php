@@ -7,11 +7,11 @@ class Showphim_model extends CI_Model {
 	public function __construct()
 	{
 		parent::__construct();
-		
+
 	}
 	public function getDatabasePhim()
 	{
-		$this->db->select('*'); 
+		$this->db->select('*');
 		$this->db->order_by('id', 'desc');
 		$ketquaphim = $this->db->get('movie');
 
@@ -22,7 +22,7 @@ class Showphim_model extends CI_Model {
 
 	public function getDatabasePhimPaginated($limit, $offset)
 	{
-		$this->db->select('*'); 
+		$this->db->select('*');
 		$this->db->order_by('id', 'desc');
 		$this->db->limit($limit, $offset);
 		$ketquaphim = $this->db->get('movie');
@@ -35,20 +35,26 @@ class Showphim_model extends CI_Model {
 	}
 	public function getDatabasePhimDC()
 	{
-		$ketquaPhimDC = $this->db->get_where('movie', 'DATEDIFF(CURRENT_DATE, open_date) >0 and DATEDIFF(CURRENT_DATE, open_date) <30');
-		$ketquaPhimDC->result_array();
-		$ketquaPhimDC = $ketquaPhimDC->result_array();
+		$this->db->select('movie.*, AVG(rating.rating) as avg_rating, COUNT(rating.id) as rating_count');
+		$this->db->from('movie');
+		$this->db->join('rating', 'rating.id_movie = movie.id', 'left');
+		$this->db->where('DATEDIFF(CURRENT_DATE, open_date) >0 and DATEDIFF(CURRENT_DATE, open_date) <30');
+		$this->db->group_by('movie.id');
+		$query = $this->db->get();
 
-		return $ketquaPhimDC;
+		return $query->result_array();
 	}
 
 	public function getDatabasePhimSC()
 	{
-		$ketquaPhimSC = $this->db->get_where('movie', 'DATEDIFF(open_date, CURRENT_DATE) >2');
-		$ketquaPhimSC->result_array();
-		$ketquaPhimSC = $ketquaPhimSC->result_array();
+		$this->db->select('movie.*, AVG(rating.rating) as avg_rating, COUNT(rating.id) as rating_count');
+		$this->db->from('movie');
+		$this->db->join('rating', 'rating.id_movie = movie.id', 'left');
+		$this->db->where('DATEDIFF(open_date, CURRENT_DATE) >2');
+		$this->db->group_by('movie.id');
+		$query = $this->db->get();
 
-		return $ketquaPhimSC;
+		return $query->result_array();
 	}
 
 	public function getinfophim($idnhantucon)
@@ -58,14 +64,14 @@ class Showphim_model extends CI_Model {
 
 
 		$dulieu= $this->db->get('movie');
-		
+
 
 		return $dulieu=$dulieu->result_array();
 	}
 
 	public function getNgay()
 	{
-		
+
 		return $this->db->select('CURDATE()');
 
 	}
@@ -73,7 +79,7 @@ class Showphim_model extends CI_Model {
 	{
 		$this->db->where('id', $id);
 		return $this->db->delete('movie');
-		
+
 	}
 	public function getDatabasePhimById($idsua)
 	{
@@ -81,20 +87,20 @@ class Showphim_model extends CI_Model {
 		$this->db->where('id', $idsua);
 		$dulieu= $this->db->get('movie');
 		$dulieu=$dulieu->result_array();
-		return $dulieu;		
+		return $dulieu;
 	}
 
 	public function updatePhimById($id,$t, $d, $di, $ac, $la, $co, $de, $op, $ca)
 	{
 		$dulieucanupdate = array(
-			'title' => $t, 
-			'duration'=> $d, 
-			'director' => $di, 
-			'actor'=>$ac, 
+			'title' => $t,
+			'duration'=> $d,
+			'director' => $di,
+			'actor'=>$ac,
 			'language'=>$la,
-			'country'=>$co, 
-			'description'=>$de, 
-			'open_date'=>$op, 
+			'country'=>$co,
+			'description'=>$de,
+			'open_date'=>$op,
 			'category'=>$ca
 		);
 		$this->db->where('id', $id);
@@ -103,7 +109,7 @@ class Showphim_model extends CI_Model {
 
 	public function upAnh($id, $po, $im1, $im2, $im3, $im4, $imt1, $imt2, $tr1, $tr2)
 	{
-		
+
 		$anhcanup = array(
 			'poster'=>$po,
 			'image1'=>$im1,
@@ -157,7 +163,19 @@ class Showphim_model extends CI_Model {
 		}
 		return $categories;
 	}
+
+	/**
+	 * Lấy tất cả phim để thêm lịch chiếu
+	 * @return array
+	 */
+	public function getAllMovies()
+	{
+		$this->db->select('id, title, duration, open_date');
+		$this->db->order_by('title', 'asc');
+		$query = $this->db->get('movie');
+		return $query->result_array();
+	}
 }
 
-/* End of file showphim_model.php */
-/* Location: ./application/models/showphim_model.php */
+/* End of file Showphim_model.php */
+/* Location: ./application/models/Showphim_model.php */

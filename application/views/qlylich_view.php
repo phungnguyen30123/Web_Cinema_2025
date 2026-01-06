@@ -56,9 +56,9 @@ ob_start();
                 <div class="card bg-primary text-white mb-3 text-center">
                     <div class="card-body">
                         <div class="thaotac text-end">
-                            <a data-href="<?php echo $daychuadoi ?>" class="nutedit btn btn-danger"><i class="fas fa-edit"></i></a>
-                            <a data-href="<?php echo $daychuadoi ?>" class="nutxoa btn btn-warning"><i class="fas fa-times"></i></a>
-                            <a href="../indexGio/<?= $value['id_movie'] ?>/<?php echo $daychuadoi ?>" class="nutxem btn btn-danger"><i class="fas fa-eye"></i></a>
+                            <a data-href="<?php echo $daychuadoi ?>" class="nutedit btn btn-warning btn-xs" title="Sửa"><i class="fas fa-edit"></i></a>
+                            <a data-href="<?php echo $daychuadoi ?>" class="nutxoa btn btn-danger btn-xs" title="Xóa"><i class="fas fa-trash"></i></a>
+                            <a href="../indexGio/<?= $value['id_movie'] ?>/<?php echo $daychuadoi ?>" class="nutxem btn btn-danger btn-xs" title="Xem"><i class="fas fa-eye"></i></a>
                         </div>
                         <div class="jquery_button text-end hidden-xs-up">
                             <a href="" class="nutluu btn btn-success">LƯU</a>
@@ -85,12 +85,20 @@ if (typeof jQuery == 'undefined') {
     document.write('<script src="https://code.jquery.com/jquery-3.6.0.min.js"><\/script>');
 }
 
-$(function(){
+// Wait for jQuery to be loaded
+function initQlyLich() {
+    console.log('Initializing QlyLich...');
+
     var duongdan = '<?php echo base_url() ?>';
     var id_movie_js = $('#id_movie').val();
 
+    console.log('Base URL:', duongdan);
+    console.log('Movie ID:', id_movie_js);
+
     // Sự kiện nút thêm ngày
     $('#nutthemngay').click(function(event) {
+        event.preventDefault(); // Prevent default form submission
+        console.log('Add date button clicked');
         var id_movie = $('#id_movie').val();
         var day = $('#day').val();
         var dout = day;
@@ -110,38 +118,58 @@ $(function(){
         dout = stringToDate(dout,"yyyy-mm-dd","-");
         dout = dout.toLocaleDateString();
         console.log(dout);
-        
+
+        // Validate date
+        if (!day || day.trim() === '') {
+            alert('Vui lòng chọn ngày!');
+            return;
+        }
+
+        console.log('Sending AJAX request to:', duongdan+'index.php/Qlylich_controller/ajax_themngay/'+id_movie);
+
         $.ajax({
             url: duongdan+'index.php/Qlylich_controller/ajax_themngay/'+id_movie,
             type: 'POST',
             dataType: 'json',
-            data: {day}
+            data: {day: day},
+            beforeSend: function() {
+                console.log('Sending request...');
+            }
         })
-        .always(function(res) {
-            noidung = '<div class="card bg-primary text-white mb-3 text-center">';
-            noidung += '<div class="card-body">';
-            noidung += '<div class="thaotac text-end">';
-            noidung += '<a data-href="'+res+'" class="nutedit btn btn-danger"><i class="fas fa-edit"></i></a>';
-            noidung += '<a data-href="'+res+'" class="nutxoa btn btn-warning"><i class="fas fa-times"></i></a>';
-            noidung += '<a href="../indexGio/'+id_movie_js+'/'+day+'" class="nutxem btn btn-danger"><i class="fas fa-eye"></i></a>';
-            noidung += '</div>';
-            noidung += '<div class="jquery_button text-end hidden-xs-up">';
-            noidung += '<a href="" class="nutluu btn btn-success">LƯU</a>';
-            noidung += '</div>';
-            noidung += '<h4 class="card-title mt-3">';
-            noidung += '<div class="form-group jquery_dayedit hidden-xs-up mb-3">';
-            noidung += '<input type="date" class="form-control dayedit" name="dayedit" value="'+day+'">';
-            noidung += '</div>';
-            noidung += '<div class="daychuaedit">';
-            noidung += '<input type="hidden" name="daychuaedit" class="daychuaedit" value="'+day+'">';
-            noidung += dout;
-            noidung += '</div>';
-            noidung += '</h4>';
-            noidung += '</div>';
-            noidung += '</div>';
-            
-            $('.cacngay').after(noidung);
-            $('#day').val('');
+        .done(function(res) {
+            if (res.success) {
+                noidung = '<div class="card bg-primary text-white mb-3 text-center">';
+                noidung += '<div class="card-body">';
+                noidung += '<div class="thaotac text-end">';
+                noidung += '<a data-href="'+res.day+'" class="nutedit btn btn-warning btn-xs" title="Sửa"><i class="fas fa-edit"></i></a>';
+                noidung += '<a data-href="'+res.day+'" class="nutxoa btn btn-danger btn-xs" title="Xóa"><i class="fas fa-trash"></i></a>';
+                noidung += '<a href="../indexGio/'+id_movie_js+'/'+res.day+'" class="nutxem btn btn-danger btn-xs" title="Xem"><i class="fas fa-eye"></i></a>';
+                noidung += '</div>';
+                noidung += '<div class="jquery_button text-end hidden-xs-up">';
+                noidung += '<a href="" class="nutluu btn btn-success">LƯU</a>';
+                noidung += '</div>';
+                noidung += '<h4 class="card-title mt-3">';
+                noidung += '<div class="form-group jquery_dayedit hidden-xs-up mb-3">';
+                noidung += '<input type="date" class="form-control dayedit" name="dayedit" value="'+res.day+'">';
+                noidung += '</div>';
+                noidung += '<div class="daychuaedit">';
+                noidung += '<input type="hidden" name="daychuaedit" class="daychuaedit" value="'+res.day+'">';
+                noidung += dout;
+                noidung += '</div>';
+                noidung += '</h4>';
+                noidung += '</div>';
+                noidung += '</div>';
+
+                $('.cacngay').after(noidung);
+                $('#day').val('');
+                alert('Thêm ngày thành công!');
+            } else {
+                alert('Lỗi: ' + (res.message || 'Có lỗi xảy ra khi thêm ngày'));
+            }
+        })
+        .fail(function(xhr, status, error) {
+            console.error('AJAX Error:', xhr.responseText, status, error);
+            alert('Có lỗi xảy ra khi gửi yêu cầu. Vui lòng thử lại.');
         });
     });
 
@@ -195,7 +223,25 @@ $(function(){
         });
         event.preventDefault();
     });
-});
+}
+
+// Initialize after jQuery is loaded
+if (typeof jQuery !== 'undefined') {
+    // jQuery is already loaded, initialize immediately
+    $(document).ready(function() {
+        initQlyLich();
+    });
+} else {
+    // Wait for jQuery to load
+    var checkJQuery = setInterval(function() {
+        if (typeof jQuery !== 'undefined') {
+            clearInterval(checkJQuery);
+            $(document).ready(function() {
+                initQlyLich();
+            });
+        }
+    }, 100);
+}
 </script>
 
 <?php

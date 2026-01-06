@@ -52,3 +52,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'Index_Controller';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+// Rating routes
+$route['rating/get_user_rating/(:num)'] = 'Rating_controller/get_user_rating/$1';
+$route['rating/set_rating'] = 'Rating_controller/set_rating';
+$route['rating/get_stats/(:num)'] = 'Rating_controller/get_stats/$1';
+$route['rating/get_movie_ratings/(:num)'] = 'Rating_controller/get_movie_ratings/$1';
+$route['rating/delete_rating'] = 'Rating_controller/delete_rating';
+$route['rating/top_rated'] = 'Rating_controller/top_rated';
+$route['rating/my_ratings'] = 'Rating_controller/my_ratings';
+
+// Ranking page (rates)
+$route['rates'] = 'Rating_page_controller/index';

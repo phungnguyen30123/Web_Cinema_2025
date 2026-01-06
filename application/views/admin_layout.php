@@ -46,6 +46,7 @@
     </main>
     
     <!-- Essential javascripts for application to work-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="<?php echo base_url(); ?>js/admin-sidebar.js"></script>
     
     <!-- Additional JavaScript (if any) -->

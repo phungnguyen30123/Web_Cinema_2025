@@ -320,12 +320,21 @@ function init_Home() {
 
     //4. Rating scrore init
     //Rating star
-    $('.score').raty({
-        width:130, 
-        score: 0,
-        path: 'images/rate/',
-        starOff : 'star-off.svg',
-        starOn  : 'star-on.svg' 
+    // Initialize generic .score elements – if element has data-readonly=1 then render as readonly with provided score
+    $('.score').each(function() {
+        var $el = $(this);
+        var readonly = parseInt($el.data('readonly')) === 1;
+        var score = $el.data('current-rating') || 0;
+        $el.raty({
+            width:130,
+            score: score,
+            readOnly: readonly,
+            half: false,
+            precision: false,
+            path: (typeof base_url !== 'undefined' ? base_url + 'images/rate/' : 'images/rate/'),
+            starOff : 'star-off.svg',
+            starOn  : 'star-on.svg'
+        });
     });
 
     //5. Scroll down navigation function
@@ -1026,12 +1035,21 @@ function init_MovieList () {
 
     //3. Rating scrore init
     //Rating star
-    $('.score').raty({
-        width:130, 
-        score: 0,
-        path: 'images/rate/',
-        starOff : 'star-off.svg',
-        starOn  : 'star-on.svg' 
+    // Initialize .score in movie lists (respect data-readonly)
+    $('.score').each(function() {
+        var $el = $(this);
+        var readonly = parseInt($el.data('readonly')) === 1;
+        var score = $el.data('current-rating') || 0;
+        $el.raty({
+            width:130,
+            score: score,
+            readOnly: readonly,
+            half: false,
+            precision: false,
+            path: (typeof base_url !== 'undefined' ? base_url + 'images/rate/' : 'images/rate/'),
+            starOff : 'star-off.svg',
+            starOn  : 'star-on.svg'
+        });
     });
 
     //4. Sorting by category
@@ -1076,14 +1094,26 @@ function init_MovieList () {
 function init_MoviePage () {
     "use strict";
 
-	//1. Rating scrore init
-    //Rating star
-    $('.score').raty({
-        width:130, 
-        score: 5,
-        path: 'images/rate/',
-        starOff : 'star-off.svg',
-        starOn  : 'star-on.svg' 
+	//1. Rating score init
+    //Rating star - Load user's current rating
+    $('.score').each(function() {
+        var $scoreDiv = $(this);
+        var movieId = $scoreDiv.data('movie-id');
+        var currentRating = $scoreDiv.data('current-rating') || 0;
+
+        $scoreDiv.raty({
+            width:130,
+            score: currentRating,
+            half: false,
+            precision: false,
+            path: (typeof base_url !== 'undefined' ? base_url + 'images/rate/' : 'images/rate/'),
+            starOff : 'star-off.svg',
+            starOn  : 'star-on.svg',
+            click: function(score) {
+                // Submit rating via AJAX
+                submitRating(movieId, score, $scoreDiv);
+            }
+        });
     });
 
     //2. Swiper slider
@@ -1606,6 +1636,75 @@ function init_MoviePage () {
     });
 }
 
+// Function to submit rating via AJAX
+function submitRating(movieId, rating, $scoreDiv) {
+    $.ajax({
+        url: (typeof base_url !== 'undefined' ? base_url + 'index.php/rating/set_rating' : 'index.php/rating/set_rating'),
+        method: 'POST',
+        data: {
+            movie_id: movieId,
+            rating: rating
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                // If this score element is inside a rates table row, update row-specific fields
+                var $row = $scoreDiv.closest('tr');
+                if ($row.length > 0) {
+                    // Update average rating and vote count in the row
+                    $row.find('.rates__result').text(parseFloat(response.avg_rating).toFixed(1));
+                    $row.find('.rates__vote').text(response.rating_count + ' votes');
+                    // Update your-vote text
+                    $row.find('.your-vote-text').html('Bạn đã đánh giá: <span class=\"user-rate-value\">' + parseFloat(rating).toFixed(1) + '</span>');
+                    // Update data attribute and visual score
+                    $scoreDiv.attr('data-current-rating', rating);
+                    $scoreDiv.raty('score', rating);
+                } else {
+                    // Fallback: update movie page selectors
+                    $('.movie__rating').text(response.avg_rating.toFixed(1));
+                    $('.rating-info small').text(response.rating_count + ' người đã đánh giá');
+                    $scoreDiv.attr('data-current-rating', rating);
+                }
+
+                // Show success message
+                showRatingMessage('Cập nhật rating thành công!', 'success');
+            } else {
+                // Show error message
+                showRatingMessage(response.message, 'error');
+
+                // Reset rating to previous value
+                var currentRating = $scoreDiv.data('current-rating') || 0;
+                $scoreDiv.raty('score', currentRating);
+            }
+        },
+        error: function(xhr, status, error) {
+            showRatingMessage('Có lỗi xảy ra khi gửi rating', 'error');
+            console.error('Rating submit error:', error);
+
+            // Reset rating to previous value
+            var currentRating = $scoreDiv.data('current-rating') || 0;
+            $scoreDiv.raty('score', currentRating);
+        }
+    });
+}
+
+// Function to show rating messages
+function showRatingMessage(message, type) {
+    // Remove existing message
+    $('.rating-message').remove();
+
+    // Create new message
+    var $message = $('<div class="rating-message ' + type + '">' + message + '</div>');
+    $('.movie__rate').append($message);
+
+    // Auto hide after 3 seconds
+    setTimeout(function() {
+        $message.fadeOut(function() {
+            $(this).remove();
+        });
+    }, 3000);
+}
+
 function init_MoviePageFull () {
     "use strict";
 
@@ -1719,20 +1818,30 @@ function init_Rates () {
 
 	//1. Rating fucntion
 				//Rating star
-                $('.score').raty({
-                    width:130, 
-                    score: 0,
-                    path: 'images/rate/',
-                    starOff : 'star-off.svg',
-                    starOn  : 'star-on.svg' 
+                $('.score').each(function() {
+                    var $el = $(this);
+                    var movieId = $el.data('movie-id') || $el.attr('data-movie-id');
+                    var readonly = parseInt($el.data('readonly')) === 1;
+                    var opts = {
+                        width:130,
+                        score: $el.data('current-rating') || 0,
+                        half: false,
+                        precision: false,
+                        path: (typeof base_url !== 'undefined' ? base_url + 'images/rate/' : 'images/rate/'),
+                        starOff : 'star-off.svg',
+                        starOn  : 'star-on.svg'
+                    };
+
+                    if (!readonly && movieId) {
+                        opts.click = function(score) {
+                            submitRating(movieId, score, $el);
+                        };
+                    }
+
+                    $el.raty(opts);
                 });
 
-                //After rate callback
-                $('.score').click(function () {
-                    $(this).children().hide();
-
-                    $(this).html('<span class="rates__done">Thanks for your vote!<span>')
-                })
+                // After rate callback - no inline message
 }
 
 function init_Cinema () {

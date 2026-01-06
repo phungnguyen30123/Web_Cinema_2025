@@ -18,7 +18,7 @@ ob_start();
         <div class="row element-button">
           <div class="col-sm-2">
             <a class="btn btn-add btn-sm" href="showadmin_controller/index_insertnv" title="Thêm">
-              <i class="fas fa-plus"></i> Thêm nhân viên
+              <i class="fas fa-plus"></i> Thêm khách hàng
             </a>
           </div>
         </div>

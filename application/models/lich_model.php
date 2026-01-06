@@ -136,6 +136,9 @@ class lich_model extends CI_Model {
 	 */
 	public function checkTrungThoiGianChieu($idm, $d, $p, $g, $duration)
 	{
+		// Khoảng cách tối thiểu giữa các suất chiếu (15 phút)
+		$buffer_minutes = 15;
+
 		// Lấy tất cả các suất chiếu trong cùng phòng và cùng ngày
 		$this->db->select('calendar.*, movie.duration as movie_duration, movie.title as movie_title');
 		$this->db->from('calendar');
@@ -144,35 +147,35 @@ class lich_model extends CI_Model {
 		$this->db->where('calendar.id_phong', $p);
 		$query = $this->db->get();
 		$schedules = $query->result_array();
-		
+
 		if (empty($schedules)) {
 			return null;
 		}
-		
+
 		// Chuyển đổi giờ chiếu mới thành phút
 		$new_time_parts = explode(':', $g);
 		$new_start_minutes = intval($new_time_parts[0]) * 60 + intval($new_time_parts[1]);
-		$new_end_minutes = $new_start_minutes + $duration;
-		
-		// Kiểm tra từng suất chiếu có trùng không
+		$new_end_minutes = $new_start_minutes + $duration + $buffer_minutes; // Thêm buffer 15 phút
+
+		// Kiểm tra từng suất chiếu có trùng không (bao gồm buffer time)
 		foreach ($schedules as $schedule) {
 			// Parse duration từ string (ví dụ: "105 phút" -> 105)
 			$movie_duration = $this->parseDuration($schedule['movie_duration']);
 			if ($movie_duration <= 0) {
 				continue; // Bỏ qua nếu không parse được duration
 			}
-			
+
 			// Chuyển đổi giờ chiếu hiện tại thành phút
 			$existing_time_parts = explode(':', $schedule['time']);
 			$existing_start_minutes = intval($existing_time_parts[0]) * 60 + intval($existing_time_parts[1]);
-			$existing_end_minutes = $existing_start_minutes + $movie_duration;
-			
-			// Kiểm tra overlap: (start1 < end2) && (start2 < end1)
+			$existing_end_minutes = $existing_start_minutes + $movie_duration + $buffer_minutes; // Thêm buffer 15 phút
+
+			// Kiểm tra overlap với buffer: (start1 < end2) && (start2 < end1)
 			if (($new_start_minutes < $existing_end_minutes) && ($existing_start_minutes < $new_end_minutes)) {
-				return $schedule; // Trùng thời gian
+				return $schedule; // Trùng thời gian (bao gồm buffer)
 			}
 		}
-		
+
 		return null; // Không trùng
 	}
 	
@@ -242,6 +245,9 @@ class lich_model extends CI_Model {
 	 */
 	public function checkTrungThoiGianChieuKhiSua($idc, $idm, $d, $p, $g, $duration)
 	{
+		// Khoảng cách tối thiểu giữa các suất chiếu (15 phút)
+		$buffer_minutes = 15;
+
 		// Lấy tất cả các suất chiếu trong cùng phòng và cùng ngày (trừ bản ghi hiện tại)
 		$this->db->select('calendar.*, movie.duration as movie_duration, movie.title as movie_title');
 		$this->db->from('calendar');
@@ -251,35 +257,35 @@ class lich_model extends CI_Model {
 		$this->db->where('calendar.id_calendar !=', $idc); // Loại trừ bản ghi hiện tại
 		$query = $this->db->get();
 		$schedules = $query->result_array();
-		
+
 		if (empty($schedules)) {
 			return null;
 		}
-		
+
 		// Chuyển đổi giờ chiếu mới thành phút
 		$new_time_parts = explode(':', $g);
 		$new_start_minutes = intval($new_time_parts[0]) * 60 + intval($new_time_parts[1]);
-		$new_end_minutes = $new_start_minutes + $duration;
-		
-		// Kiểm tra từng suất chiếu có trùng không
+		$new_end_minutes = $new_start_minutes + $duration + $buffer_minutes; // Thêm buffer 15 phút
+
+		// Kiểm tra từng suất chiếu có trùng không (bao gồm buffer time)
 		foreach ($schedules as $schedule) {
 			// Parse duration từ string (ví dụ: "105 phút" -> 105)
 			$movie_duration = $this->parseDuration($schedule['movie_duration']);
 			if ($movie_duration <= 0) {
 				continue; // Bỏ qua nếu không parse được duration
 			}
-			
+
 			// Chuyển đổi giờ chiếu hiện tại thành phút
 			$existing_time_parts = explode(':', $schedule['time']);
 			$existing_start_minutes = intval($existing_time_parts[0]) * 60 + intval($existing_time_parts[1]);
-			$existing_end_minutes = $existing_start_minutes + $movie_duration;
-			
-			// Kiểm tra overlap: (start1 < end2) && (start2 < end1)
+			$existing_end_minutes = $existing_start_minutes + $movie_duration + $buffer_minutes; // Thêm buffer 15 phút
+
+			// Kiểm tra overlap với buffer: (start1 < end2) && (start2 < end1)
 			if (($new_start_minutes < $existing_end_minutes) && ($existing_start_minutes < $new_end_minutes)) {
-				return $schedule; // Trùng thời gian
+				return $schedule; // Trùng thời gian (bao gồm buffer)
 			}
 		}
-		
+
 		return null; // Không trùng
 	}
 	
@@ -305,7 +311,33 @@ class lich_model extends CI_Model {
 		$this->db->where('id_movie', $idm);
 		$this->db->where('day', $d);
 		return $this->db->get('calendar');
-		
+
+	}
+
+	public function getAllSchedulesWithMovies()
+	{
+		$this->db->select('calendar.*, movie.title as movie_title, movie.duration, movie.poster, room.ten_phong');
+		$this->db->from('calendar');
+		$this->db->join('movie', 'calendar.id_movie = movie.id', 'left');
+		$this->db->join('room', 'calendar.id_phong = room.id_room', 'left');
+		$this->db->where('calendar.day >=', date('Y-m-d')); // Chỉ lấy lịch từ hôm nay trở đi
+		$this->db->order_by('calendar.day', 'asc');
+		$this->db->order_by('calendar.time', 'asc');
+
+		$query = $this->db->get();
+		return $query->result_array();
+	}
+
+	public function getSchedulesByDate($date)
+	{
+		$this->db->select('calendar.*, room.ten_phong');
+		$this->db->from('calendar');
+		$this->db->join('room', 'calendar.id_phong = room.id_room', 'left');
+		$this->db->where('calendar.day', $date);
+		$this->db->order_by('calendar.time', 'asc');
+
+		$query = $this->db->get();
+		return $query->result_array();
 	}
 
 }

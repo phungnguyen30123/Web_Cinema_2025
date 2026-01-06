@@ -50,8 +50,8 @@ ob_start();
               <td><?php echo $value['open_date'] ?></td>
               <td><?php echo $value['category'] ?></td>
               <td><a href="Qlyanh_controller/index/<?php echo $value['id'] ?>">Quản lý ảnh</a></td>
-              <td><a href="Nhanvien_controller/deletePhim/<?php echo $value['id'] ?>" class="btn btn-danger xoa"><i class="far fa-trash-alt"></i></a></td>
-              <td><a href="EditPhim_controller/editPhim/<?php echo $value['id'] ?>" class="btn btn-danger sua"><i class="fas fa-edit"></i></a></td>
+              <td><a href="Nhanvien_controller/deletePhim/<?php echo $value['id'] ?>" class="btn btn-danger btn-xs xoa" title="Xóa"><i class="fas fa-trash"></i></a></td>
+              <td><a href="EditPhim_controller/editPhim/<?php echo $value['id'] ?>" class="btn btn-warning btn-xs sua" title="Sửa"><i class="fas fa-edit"></i></a></td>
             </tr>
             <?php endforeach ?>
           </tbody>

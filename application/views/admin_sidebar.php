@@ -7,7 +7,7 @@ $user_role = $user_role ? $user_role : 'user'; // Mặc định là 'user' nếu
 $default_menu_items = array();
 
 if ($user_role == 'admin') {
-    // Admin: hiển thị 4 menu
+    // Admin: hiển thị 5 menu
     $default_menu_items = array(
         array(
             'url' => 'index.php/showadmin_controller',
@@ -22,6 +22,13 @@ if ($user_role == 'admin') {
             'label' => 'Quản lý nhân viên',
             'controller' => 'showadmin_controller',
             'method' => 'index_qlnv'
+        ),
+        array(
+            'url' => 'index.php/Qlylich_controller/indexCalendar',
+            'icon' => 'bx bx-calendar',
+            'label' => 'Quản lý lịch chiếu',
+            'controller' => 'Qlylich_controller',
+            'method' => 'indexCalendar'
         ),
         array(
             'url' => 'index.php/Nhanvien_controller/index_xacnhanve',
@@ -39,8 +46,15 @@ if ($user_role == 'admin') {
         )
     );
 } elseif ($user_role == 'staff') {
-    // Nhân viên: chỉ hiển thị 2 menu
+    // Nhân viên: hiển thị 3 menu
     $default_menu_items = array(
+        array(
+            'url' => 'index.php/Qlylich_controller/indexCalendar',
+            'icon' => 'bx bx-calendar',
+            'label' => 'Quản lý lịch chiếu',
+            'controller' => 'Qlylich_controller',
+            'method' => 'indexCalendar'
+        ),
         array(
             'url' => 'index.php/Nhanvien_controller/index_xacnhanve',
             'icon' => 'bx bx-cart-alt',

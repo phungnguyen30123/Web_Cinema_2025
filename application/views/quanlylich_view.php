@@ -61,9 +61,9 @@
         
 
 
-                                <a   data-href="" class="nutedit btn btn-danger"> <i class="fa fa-pencil"></i></a>
+                                <a data-href="" class="nutedit btn btn-warning btn-xs" title="Sửa"> <i class="fas fa-edit"></i></a>
 
-                                 <a    data-href="" class="nutxoa btn btn-warning"> <i class="fa fa-remove"></i></a>
+                                 <a data-href="" class="nutxoa btn btn-danger btn-xs" title="Xóa"> <i class="fas fa-trash"></i></a>
                             </div>
                              
 

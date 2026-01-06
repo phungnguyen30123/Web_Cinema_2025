@@ -10,8 +10,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 
 // Chọn AI Provider: 'openai', 'huggingface', 'gemini', hoặc 'none' (chỉ dùng rule-based)
-$config['ai_provider'] = getenv('AI_PROVIDER') ? getenv('AI_PROVIDER') : 'none';
-$config['ai_provider'] = 'openai'; // hoặc 'huggingface', 'gemini', 'none'
+//$config['ai_provider'] = getenv('AI_PROVIDER') ? getenv('AI_PROVIDER') : 'none';
+$config['ai_provider'] = 'gemini'; // hoặc 'huggingface', 'gemini', 'none'
 
 // ===== OpenAI Configuration =====
 $config['openai_api_key'] = getenv('OPENAI_API_KEY') ? getenv('OPENAI_API_KEY') : '';

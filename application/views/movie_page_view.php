@@ -33,8 +33,34 @@
     <!-- Custom -->
     <link href="<?php echo base_url(); ?>css/style.css?v=1" rel="stylesheet" />
 
-    <!-- Modernizr --> 
+    <!-- Modernizr -->
     <script src="<?php echo base_url(); ?>js/external/modernizr.custom.js"></script>
+
+    <!-- Rating CSS -->
+    <style>
+    .rating-info {
+        margin-top: 5px;
+        font-size: 12px;
+        color: #666;
+    }
+    .rating-message {
+        margin-top: 10px;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .rating-message.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    .rating-message.error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    </style>
 </head>
 <body>
 
@@ -54,10 +80,16 @@
                         <div class="movie__info">
                             <div class="col-sm-4 col-md-3 movie-mobile">
                                 <div class="movie__images">
-                                    <span class="movie__rating">5.0</span>
+                                    <span class="movie__rating"><?php echo number_format($avg_rating, 1); ?></span>
                                     <img alt='' src="<?php echo $value['poster'] ?>">
                                 </div>
-                                <!-- <div class="movie__rate">Đánh giá: </div> -->
+                                <div class="movie__rate">
+                                    Đánh giá:
+                                    <div id='score' class="score" data-movie-id="<?php echo $value['id']; ?>" data-current-rating="<?php echo $user_rating ?: 0; ?>"></div>
+                                    <div class="rating-info">
+                                        <small><?php echo $rating_count; ?> người đã đánh giá</small>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col-sm-8 col-md-9">
@@ -197,14 +229,14 @@
                 <div class="time-select__group group--first">
 
                     <ul class="col-sm-8 items-wrap">
-                        <?php 
+                        <?php
                             $daykey = isset($valuengay['day']) ? $valuengay['day'] : $valuengay[0];
                             if (!empty($dulieugiotucontroller[$daykey])):
                                 foreach ($dulieugiotucontroller[$daykey] as $valuegio): ?>
                                     <a href="<?php echo base_url(); ?>index.php/seat_controller/index_seat/<?= $valuegio['id_calendar']; ?>" class="time-select-link" data-seat-url="<?php echo base_url(); ?>index.php/seat_controller/index_seat/<?= $valuegio['id_calendar']; ?>"><li class="time-select__item"><?= $valuegio['time']; ?></li></a>
-                                <?php endforeach; 
+                                <?php endforeach;
                             else: ?>
-                                <li class="time-select__item">Không có suất chiếu</li>
+                                <li class="time-select__item text-muted">Chưa có suất chiếu</li>
                             <?php endif; ?>
                     </ul>
                 </div>
@@ -380,50 +412,7 @@
 
 <div class="clearfix"></div>
 
-<footer class="footer-wrapper">
-    <section class="container">
-        <div class="col-xs-4 col-md-2 footer-nav">
-            <ul class="nav-link">
-
-                <li><a href="movie-list-left.html" class="nav-link__item">PHim</a></li>
-                <li><a href="trailer.html" class="nav-link__item">Trailers</a></li>
-                <li><a href="rates-left.html" class="nav-link__item">phim chiếu</a></li>
-            </ul>
-        </div>
-        <div class="col-xs-4 col-md-2 footer-nav">
-            <ul class="nav-link">
-                <li><a href="coming-soon.html" class="nav-link__item">phim đang chiếu</a></li>
-                <li><a href="rates-left.html" class="nav-link__item">phim sắp chiếu</a></li>
-
-                <li><a href="cinema-list.html" class="nav-link__item">rạp</a></li>
-
-
-            </ul>
-        </div>
-        <div class="col-xs-4 col-md-2 footer-nav">
-            <ul class="nav-link">
-                <li><a href="offers.html" class="nav-link__item">khuyến mãi</a></li>
-                <li><a href="#" class="nav-link__item">Liên hệ</a></li>
-                <li><a href="gallery-four.html" class="nav-link__item">đăng nhập</a></li>
-            </ul>
-        </div>
-        <div class="col-xs-12 col-md-6">
-            <div class="footer-info">
-
-                <div class="social">
-                    <a href='#' class="social__variant fa fa-facebook"></a>
-                    <a href='#' class="social__variant fa fa-twitter"></a>
-                    <a href='#' class="social__variant fa fa-vk"></a>
-                    <a href='#' class="social__variant fa fa-instagram"></a>
-                    <a href='#' class="social__variant fa fa-tumblr"></a>
-                    <a href='#' class="social__variant fa fa-pinterest"></a>
-                </div>
-
-                <div class="clearfix"></div>
-            </div>
-        </div>
-    </section>
-</footer>
+<?php require('footer_view.php'); ?>
 </div>
 
 <!-- open/close -->
@@ -689,6 +678,9 @@
         };
         
         $(document).ready(function() {
+            // Set base URL for AJAX calls
+            window.base_url = '<?php echo base_url(); ?>';
+
             console.log('=== DOCUMENT READY ===');
             init_MoviePage();
             init_MoviePageFull();
@@ -1139,3 +1131,4 @@
 </script>
 </body>
 </html>
+

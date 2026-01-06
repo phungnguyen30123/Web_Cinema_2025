@@ -1,0 +1,62 @@
+@startuml AI Architecture Diagram
+
+title Kiến Trúc Hệ Thống AI - Website Rạp Chiếu Phim
+
+actor "Người Dùng" as User
+participant "Chatbot UI" as UI
+participant "ChatbotController" as Controller
+participant "AI Config" as Config
+participant "Database" as DB
+participant "AI Service\n(Gemini/OpenAI)" as AI
+participant "Rule-based\nEngine" as RuleBased
+
+== Luồng Chính (AI Mode) ==
+User -> UI: Gửi tin nhắn\n"Vui lòng cho biết phim đang chiếu"
+UI -> Controller: POST /chat\n{message: "..."}
+Controller -> Config: get('ai_provider')
+Config --> Controller: 'gemini'
+
+Controller -> DB: getDatabasePhimDC()\ngetDatabasePhimSC()
+DB --> Controller: Danh sách phim thực tế
+
+Controller -> Controller: buildContext()\nTạo prompt với context
+Controller -> AI: callGeminiAPI(prompt)
+AI --> Controller: AI Response
+
+alt API Success
+    Controller --> UI: JSON {response: "AI trả lời..."}
+else API Failed (Quota/Network)
+    Controller -> RuleBased: getRuleBasedResponse()
+    RuleBased --> Controller: Rule-based response
+    Controller --> UI: JSON {response: "Rule trả lời..."}
+end
+
+UI --> User: Hiển thị phản hồi
+
+== Chi Tiết Context Building ==
+group Context Injection
+Controller -> DB: Query phim đang chiếu
+DB --> Controller: Avengers, Frozen II, Joker...
+Controller -> DB: Query phim sắp chiếu
+DB --> Controller: Avatar 2, Sonic 3...
+Controller -> Controller: Format context\n🎬 PHIM ĐANG CHIẾU:\n- Avengers...\n\n⚠️ Không được bịa đặt!
+end
+
+== Fallback Mechanism ==
+note right of Controller
+<b>Fallback Logic:</b>
+1. Try AI API first
+2. If fail → Rule-based
+3. If no rule match → Default response
+4. Always return something
+end note
+
+== Configuration Layer ==
+Config -> Config: ai_provider = 'gemini'\napi_key = from env\ntemperature = 0.7\nmax_tokens = 500
+
+== Monitoring ==
+Controller -> Controller: Log API calls\nTrack success/failure\nMonitor quota usage
+
+@enduml
+
+

@@ -1,0 +1,154 @@
+@startuml Class Diagram - Movie Ticket Booking System
+
+' ===== CONTROLLERS =====
+class Index_controller {
+    +index()
+    +__construct()
+}
+
+class ShowPhim {
+    +index()
+    +PhimDC()
+    +PhimSC()
+    +__construct()
+}
+
+class ThanhToan_controller {
+    +xulyketqua()
+    +__construct()
+}
+
+class Chatbot_controller {
+    +chat()
+    +processMessage()
+    +__construct()
+}
+
+class Login_register {
+    +login()
+    +register()
+    +logout()
+    +__construct()
+}
+
+' ===== MODELS =====
+class Showphim_model {
+    +getDatabasePhim()
+    +getDatabasePhimDC()
+    +getDatabasePhimSC()
+    +getinfophim()
+    +deletePhimById()
+    +updatePhimById()
+    +getPhimByCategory()
+    +getAllCategories()
+}
+
+class Seat_model {
+    +addMomo()
+    +addVNPay()
+    +getSeatsByCalendar()
+}
+
+class Login_model {
+    +checkLogin()
+    +getUserInfo()
+}
+
+
+' ===== DATABASE ENTITIES =====
+class Movie {
+    -id: int
+    -title: string
+    -duration: string
+    -director: string
+    -actor: string
+    -language: string
+    -country: string
+    -description: text
+    -open_date: date
+    -category: string
+    -poster: string
+    -image1: string
+    -image2: string
+    -image3: string
+    -image4: string
+    -trailer1: string
+    -trailer2: string
+}
+
+class User {
+    -user_id: int
+    -username: string
+    -password: string
+    -email: string
+    -phone: string
+    -role: string
+}
+
+class Booking {
+    -booking_id: int
+    -user_id: int
+    -calendar_id: int
+    -total_amount: string
+    -status: int
+    -seats: string
+}
+
+class Calendar {
+    -calendar_id: int
+    -movie_id: int
+    -day: date
+    -room_id: int
+    -time: string
+    -ticket_price: bigint
+}
+
+class Room {
+    -room_id: int
+    -room_name: string
+    -seat_count: int
+}
+
+
+class MoMo {
+    -id: int
+    -partnerCode: string
+    -orderId: string
+    -amount: string
+    -signature: string
+    -booking_id: int
+}
+
+class VNPay {
+    -id: int
+    -vnp_TxnRef: string
+    -vnp_Amount: string
+    -vnp_SecureHash: string
+    -booking_id: int
+}
+
+' ===== RELATIONSHIPS =====
+
+' Controller -> Model relationships
+Index_controller --> Showphim_model
+ShowPhim --> Showphim_model
+ThanhToan_controller --> Seat_model
+Chatbot_controller --> Showphim_model
+Login_register --> Login_model
+
+' Model -> Database relationships
+Showphim_model --> Movie
+Seat_model --> Booking
+Seat_model --> MoMo
+Seat_model --> VNPay
+Login_model --> User
+
+' Database relationships
+Movie "1" --> "*" Calendar : has
+Calendar "1" --> "*" Booking : contains
+User "1" --> "*" Booking : makes
+Room "1" --> "*" Calendar : hosts
+Booking "1" --> "0..1" MoMo : paid_by
+Booking "1" --> "0..1" VNPay : paid_by
+
+@enduml

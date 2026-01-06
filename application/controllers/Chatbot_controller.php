@@ -346,13 +346,64 @@ class Chatbot_controller extends CI_Controller {
             return null;
         }
 
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" . $apiKey;
-        
+        // Lấy thông tin phim để làm context
+        $moviesDC = $this->showPhim_model->getDatabasePhimDC();
+        $moviesSC = $this->showPhim_model->getDatabasePhimSC();
+        $moviesListDC = "";
+        $moviesListSC = "";
+
+        // Danh sách phim đang chiếu
+        if (!empty($moviesDC)) {
+            $count = 0;
+            foreach ($moviesDC as $movie) {
+                if ($count >= 8) break; // Tăng lên 8 phim
+                $moviesListDC .= "- " . $movie['title'];
+                if (!empty($movie['category'])) {
+                    $moviesListDC .= " (" . $movie['category'] . ")";
+                }
+                if (!empty($movie['duration'])) {
+                    $moviesListDC .= " - " . $movie['duration'];
+                }
+                $moviesListDC .= "\n";
+                $count++;
+            }
+        }
+
+        // Danh sách phim sắp chiếu
+        if (!empty($moviesSC)) {
+            $count = 0;
+            foreach ($moviesSC as $movie) {
+                if ($count >= 5) break;
+                $moviesListSC .= "- " . $movie['title'];
+                if (!empty($movie['open_date'])) {
+                    $moviesListSC .= " (Khởi chiếu: " . date('d/m/Y', strtotime($movie['open_date'])) . ")";
+                }
+                $moviesListSC .= "\n";
+                $count++;
+            }
+        }
+
+        // Tạo system prompt với context đầy đủ
+        $systemPrompt = $this->config->item('ai_system_prompt');
+        $systemPrompt .= "\n\n🎬 PHIM ĐANG CHIẾU:\n" . ($moviesListDC ?: "Hiện tại chưa có phim nào đang chiếu.");
+        $systemPrompt .= "\n\n🎭 PHIM SẮP CHIẾU:\n" . ($moviesListSC ?: "Hiện tại chưa có phim nào sắp chiếu.");
+        $systemPrompt .= "\n\n💰 GIÁ VÉ:\n";
+        $systemPrompt .= "- Ghế Thường: 50.000 VNĐ\n";
+        $systemPrompt .= "- Ghế VIP: 80.000 VNĐ\n";
+        $systemPrompt .= "- Ghế Đôi: 100.000 VNĐ\n\n";
+        $systemPrompt .= "📋 THÔNG TIN HỖ TRỢ:\n";
+        $systemPrompt .= "- Hỗ trợ đặt vé online\n";
+        $systemPrompt .= "- Thanh toán qua MoMo, VNPay\n";
+        $systemPrompt .= "- Có khuyến mãi đặc biệt\n\n";
+        $systemPrompt .= "⚠️  QUAN TRỌNG: Luôn trả lời dựa trên thông tin phim thực tế ở trên. Không được bịa đặt tên phim hoặc thông tin!";
+
+        $url = "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=" . $apiKey;
+
         $data = [
             'contents' => [
                 [
                     'parts' => [
-                        ['text' => $this->config->item('ai_system_prompt') . "\n\nNgười dùng: " . $message . "\nTrợ lý:"]
+                        ['text' => $systemPrompt . "\n\nNgười dùng: " . $message . "\n\nTrợ lý:"]
                     ]
                 ]
             ]

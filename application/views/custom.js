@@ -1729,12 +1729,7 @@ function init_Rates () {
                     starOn  : 'star-on.svg' 
                 });
 
-                //After rate callback
-                $('.score').click(function () {
-                    $(this).children().hide();
-
-                    $(this).html('<span class="rates__done">Thanks for your vote!<span>')
-                })
+                // After rate callback removed (no inline message)
 }
 
 function init_Cinema () {

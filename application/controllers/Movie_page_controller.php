@@ -12,6 +12,8 @@ class Movie_page_controller extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		// Ensure session is available when building view data
+		$this->load->library('session');
 	}
 
 	public function index()
@@ -56,6 +58,30 @@ class Movie_page_controller extends CI_Controller {
 		// Lấy bình luận chưa được xử lý
 		$this->load->model('comment_model');
 		$binhluan_chuaxuly = $this->comment_model->getCommentsChuaXuLy($idlaytuview);
+
+		// ===== RATING SYSTEM =====
+		// Lấy thông tin rating của phim
+		$this->load->model('Rating_model');
+		$avg_rating = $this->Rating_model->getAverageRating($idlaytuview);
+		$rating_count = $this->Rating_model->getRatingCount($idlaytuview);
+
+		// Lấy rating của user hiện tại (nếu đã đăng nhập)
+		$user_rating = null;
+		if ($this->session->userdata('id_user')) {
+			$user_rating_data = $this->Rating_model->getUserRating(
+				$this->session->userdata('id_user'),
+				$idlaytuview
+			);
+			if ($user_rating_data) {
+				$user_rating = $user_rating_data['rating'];
+			}
+		}
+
+		$dulieurating = array(
+			'avg_rating' => $avg_rating,
+			'rating_count' => $rating_count,
+			'user_rating' => $user_rating
+		);
 		
 		// ===== PHÂN TÍCH CẢM XÚC BÌNH LUẬN (SENTIMENT ANALYSIS) - TẠM TẮT =====
 		// Lấy thông tin sentiment cho mỗi bình luận
@@ -76,7 +102,7 @@ class Movie_page_controller extends CI_Controller {
 		
 		$dulieubinhluan = array('binhluan_chuaxuly' => $binhluan_chuaxuly);
 
-		$this->load->view('movie_page_view', $ketqua + $dulieungay + $dulieugio + $dulieubinhluan);
+		$this->load->view('movie_page_view', $ketqua + $dulieungay + $dulieugio + $dulieubinhluan + $dulieurating);
 		
 	}
 
