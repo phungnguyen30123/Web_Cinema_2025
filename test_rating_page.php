@@ -60,3 +60,8 @@ echo "<li>Thử click vào ngôi sao để đánh giá</li>";
 echo "<li>Kiểm tra rating trung bình có cập nhật không</li>";
 echo "</ol>";
 ?>
+
+
+
+
+

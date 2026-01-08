@@ -315,3 +315,8 @@ php Database/check_rating_table.php       # Kiểm tra cấu trúc bảng
 
 **Ngày tạo:** 06/01/2026
 **Phiên bản:** 1.0
+
+
+
+
+

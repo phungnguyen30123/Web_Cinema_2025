@@ -106,3 +106,8 @@ echo "<br><br><h2>Summary</h2>";
 echo "<p>If you can see movie data with rating information above, the changes are working correctly.</p>";
 echo "<p>The rating display should now show dynamic data instead of the hardcoded '170 lượt bình chọn' and '5.0' values.</p>";
 ?>
+
+
+
+
+

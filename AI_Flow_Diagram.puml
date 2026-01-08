@@ -1,0 +1,72 @@
+@startuml AI Message Processing Flow
+title AI Chatbot Message Processing Flow
+
+start
+
+:User Input\n(Chat Box);
+:Enter question;
+
+:Controller\nReceives & Validates;
+:Input data validation;
+
+:Database Query;
+note right
+- Movies showing
+- Showtimes
+- Ticket prices
+- Promotions
+end note
+
+:Context Construction;
+note right
+Build prompt with:
+- System instructions
+- Database context
+- User question
+end note
+
+:AI API Call;
+note right
+Send to external AI:
+- Google Gemini
+- OpenAI GPT
+- Hugging Face
+end note
+
+if (API Success?) then (yes)
+    :Response Processing;
+    note right
+    - Format response
+    - Validate content
+    - Prepare output
+    end note
+
+    :Return to User;
+    note right
+    Display in chat box
+    end note
+
+else (no)
+    :Fallback Mechanism;
+    note right
+    Switch to rule-based
+    system (85+ patterns)
+    end note
+
+    :Rule-based Response;
+    note right
+    Pre-defined responses
+    for common questions
+    end note
+
+    :Return to User;
+    note right
+    Display fallback
+    response in chat box
+    end note
+endif
+
+stop
+@enduml
+
+

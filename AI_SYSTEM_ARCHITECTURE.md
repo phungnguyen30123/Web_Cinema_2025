@@ -324,3 +324,8 @@ Hệ thống AI của website sử dụng **Prompt Engineering + Context Injecti
 *Tài liệu được tạo cho đồ án tốt nghiệp - Kiến trúc hệ thống AI website rạp chiếu phim*
 
 
+
+
+
+
+

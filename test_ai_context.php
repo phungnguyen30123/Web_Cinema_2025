@@ -120,3 +120,8 @@ echo "Nếu AI bịa ra phim khác → Cần điều chỉnh prompt hoặc model
 ?>
 
 
+
+
+
+
+

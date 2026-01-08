@@ -76,3 +76,8 @@ User hỏi: "Phim nào đang chiếu?"
 **Tóm tắt:** Đây là cách tiếp cận AI thông minh, hiện đại và phù hợp cho đồ án tốt nghiệp, chứng minh khả năng áp dụng công nghệ AI tiên tiến trong thực tế.
 
 
+
+
+
+
+
